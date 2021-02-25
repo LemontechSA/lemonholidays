@@ -16,6 +16,12 @@ export class Countries extends Entity {
   })
   name: string;
 
+  @property({
+    type: 'string',
+    required: true,
+  })
+  code: string;
+
 
   constructor(data?: Partial<Countries>) {
     super(data);
