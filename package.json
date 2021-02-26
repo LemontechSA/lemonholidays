@@ -1,7 +1,7 @@
 {
-  "name": "lemonholydays",
+  "name": "lemonholidays",
   "version": "0.0.1",
-  "description": "Holydays service",
+  "description": "Holidays service",
   "keywords": [
     "loopback-application",
     "loopback"
