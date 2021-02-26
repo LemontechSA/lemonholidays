@@ -1,4 +1,4 @@
-import {LemonholydaysApplication} from '../..';
+import {LemonholidaysApplication} from '../..';
 import {
   createRestAppClient,
   givenHttpServerConfig,
@@ -14,7 +14,7 @@ export async function setupApplication(): Promise<AppWithClient> {
     // port: +process.env.PORT,
   });
 
-  const app = new LemonholydaysApplication({
+  const app = new LemonholidaysApplication({
     rest: restConfig,
   });
 
@@ -27,6 +27,6 @@ export async function setupApplication(): Promise<AppWithClient> {
 }
 
 export interface AppWithClient {
-  app: LemonholydaysApplication;
+  app: LemonholidaysApplication;
   client: Client;
 }

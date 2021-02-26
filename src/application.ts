@@ -12,7 +12,7 @@ import {MySequence} from './sequence';
 
 export {ApplicationConfig};
 
-export class LemonholydaysApplication extends BootMixin(
+export class LemonholidaysApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
   constructor(options: ApplicationConfig = {}) {

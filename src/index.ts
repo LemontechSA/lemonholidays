@@ -1,9 +1,9 @@
-import {ApplicationConfig, LemonholydaysApplication} from './application';
+import {ApplicationConfig, LemonholidaysApplication} from './application';
 
 export * from './application';
 
 export async function main(options: ApplicationConfig = {}) {
-  const app = new LemonholydaysApplication(options);
+  const app = new LemonholidaysApplication(options);
   await app.boot();
   await app.start();
 
