@@ -1,4 +1,7 @@
 import {ApplicationConfig, LemonholidaysApplication} from './application';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export * from './application';
 
