@@ -1,4 +1,4 @@
-import {injectable, /* inject, */ BindingScope} from '@loopback/core';
+import {injectable, BindingScope} from '@loopback/core';
 import {google} from 'googleapis';
 
 @injectable({scope: BindingScope.TRANSIENT})
