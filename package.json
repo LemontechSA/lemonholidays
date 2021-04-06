@@ -57,6 +57,7 @@
     "@loopback/service-proxy": "^3.1.0",
     "dotenv": "^8.2.0",
     "googleapis": "^68.0.0",
+    "loopback-connector-mongodb": "^5.5.0",
     "loopback-connector-rest": "^4.0.1",
     "tslib": "^2.0.0"
   },
