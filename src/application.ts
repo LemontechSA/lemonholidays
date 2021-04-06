@@ -9,6 +9,10 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import {CronUpdateHolidays} from './components/cron.component';
+
+require('dotenv').config();
+
 
 export {ApplicationConfig};
 
@@ -17,6 +21,10 @@ export class LemonholidaysApplication extends BootMixin(
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
+    //cron component
+    if(process.env.RUN_CRON === 'true'){
+      this.component(CronUpdateHolidays);
+    }
 
     // Set up the custom sequence
     this.sequence(MySequence);
