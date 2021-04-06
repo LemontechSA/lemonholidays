@@ -41,12 +41,12 @@ export class Holidays extends Entity {
   @property({
     type: 'date',
   })
-  created_at?: string;
+  createdAt?: string;
 
   @property({
     type: 'date',
   })
-  updated_at?: string;
+  updatedAt?: string;
 
 
   constructor(data?: Partial<Holidays>) {
