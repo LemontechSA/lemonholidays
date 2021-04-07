@@ -33,9 +33,16 @@ export class Holidays extends Entity {
   origin?: string;
   
   @property({
-    type: 'string'
+    type: 'string',
+    required: true,
   })
   country: string;
+
+  @property({
+    type: 'boolean',
+    required: true,
+  })
+  active: boolean;
 
   @property({
     type: 'date',
@@ -46,7 +53,6 @@ export class Holidays extends Entity {
     type: 'date',
   })
   updatedAt?: string;
-
 
   constructor(data?: Partial<Holidays>) {
     super(data);
