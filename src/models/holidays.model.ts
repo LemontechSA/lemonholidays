@@ -31,10 +31,9 @@ export class Holidays extends Entity {
     type: 'string',
   })
   origin?: string;
-
+  
   @property({
-    type: 'string',
-    required: true,
+    type: 'string'
   })
   country: string;
 

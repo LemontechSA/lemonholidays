@@ -1,5 +1,4 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {Holidays} from './holidays.model';
+import {Entity, model, property} from '@loopback/repository';
 
 @model()
 export class Countries extends Entity {
@@ -22,9 +21,6 @@ export class Countries extends Entity {
     required: true,
   })
   code: string;
-
-  @hasMany(() => Holidays)
-  holidays?: Holidays[];
 
   constructor(data?: Partial<Countries>) {
     super(data);
