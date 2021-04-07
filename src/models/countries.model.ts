@@ -22,7 +22,6 @@ export class Countries extends Entity {
   })
   code: string;
 
-
   constructor(data?: Partial<Countries>) {
     super(data);
   }
