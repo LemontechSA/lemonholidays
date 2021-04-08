@@ -13,4 +13,13 @@ export class HolidaysRepository extends DefaultCrudRepository<
   ) {
     super(Holidays, dataSource);
   }
+
+  async findByCountry(country: string) {
+    const result = await this.find({
+      where: {
+        country: country
+      }
+    })
+    return result;
+  }
 }
