@@ -17,7 +17,7 @@ export class HolidaysController {
     public holidaysRepository : HolidaysRepository,
   ) {}
 
-   @get('/holidays/country')
+  @get('/holidays/{country}')
   @response(200, {
     description: 'Array of Holidays model instances',
     content: {
@@ -30,7 +30,7 @@ export class HolidaysController {
     },
   })
   async find(
-    @param.path.number('country') country: string,
+    @param.path.string('country') country: string,
     @param.filter(Holidays) filter?: Filter<Holidays>,
   ): Promise<Holidays[]> {
     return this.holidaysRepository.findByCountry(country);
