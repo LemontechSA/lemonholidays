@@ -31,8 +31,8 @@ export class HolidaysController {
   })
   async find(
     @param.path.string('country') country: string,
-    @param.filter(Holidays) filter?: Filter<Holidays>,
+    @param.query.number('year') year?: number,
   ): Promise<Holidays[]> {
-    return this.holidaysRepository.findByCountry(country);
+    return this.holidaysRepository.findByCountry(country, year);
   }
 }

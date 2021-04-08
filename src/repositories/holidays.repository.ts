@@ -14,10 +14,22 @@ export class HolidaysRepository extends DefaultCrudRepository<
     super(Holidays, dataSource);
   }
 
-  async findByCountry(country: string) {
+  async findByCountry(country: string, year?: number) {
+    if (!year) {
+      year = 2021;
+    }
+    const first = Date.parse(`${year}-01-01`).toString();
+    const last = Date.parse(`${year}-12-31`).toString();
     const result = await this.find({
       where: {
-        country: country
+        and: [
+          {
+            country
+          },
+          {
+            date: {between: [first, last]}
+          }
+        ]
       }
     })
     return result;
