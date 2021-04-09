@@ -3,11 +3,11 @@ import {Entity, model, property} from '@loopback/repository';
 @model()
 export class Holidays extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  id?: number;
+  id?: string;
 
   @property({
     type: 'string',
@@ -29,6 +29,9 @@ export class Holidays extends Entity {
 
   @property({
     type: 'string',
+    jsonSchema: {
+      pattern: '^(api|manual)$',
+    },
   })
   origin?: string;
   
