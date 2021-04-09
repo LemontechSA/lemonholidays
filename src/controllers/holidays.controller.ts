@@ -1,7 +1,4 @@
-import {
-  Filter,
-  repository,
-} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {
   param,
   get,
