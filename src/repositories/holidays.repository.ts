@@ -18,8 +18,8 @@ export class HolidaysRepository extends DefaultCrudRepository<
     if (!year) {
       year = 2021;
     }
-    const first = Date.parse(`${year}-01-01`).toString();
-    const last = Date.parse(`${year}-12-31`).toString();
+    const first = new Date(`${year}-01-01T00:00:00`);
+    const last = new Date(`${year}-12-31T23:59:59`);
     const result = await this.find({
       where: {
         and: [
