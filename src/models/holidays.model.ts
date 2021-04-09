@@ -28,7 +28,7 @@ export class Holidays extends Entity {
   type: string;
 
   @property({
-    type: 'string',
+    type: 'string'
   })
   origin?: string;
   
