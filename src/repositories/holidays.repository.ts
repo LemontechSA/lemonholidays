@@ -16,7 +16,7 @@ export class HolidaysRepository extends DefaultCrudRepository<
 
   async findByCountry(country: string, year?: number) {
     if (!year) {
-      year = 2021;
+      year = new Date().getFullYear();
     }
     const first = new Date(`${year}-01-01T00:00:00`);
     const last = new Date(`${year}-12-31T23:59:59`);
