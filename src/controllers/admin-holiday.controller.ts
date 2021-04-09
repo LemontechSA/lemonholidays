@@ -33,7 +33,7 @@ export class AdminHolidayController {
     holidays: Holidays,
   ): Promise<void> {
     holidays.origin = 'manual';
-    holidays.updatedAt = new Date().toString();
+    holidays.updatedAt = new Date();
     await this.holidaysRepository.updateById(id, holidays);
   }
 

@@ -19,7 +19,7 @@ export class Holidays extends Entity {
     type: 'date',
     required: true,
   })
-  date: string;
+  date: Date;
 
   @property({
     type: 'string',
@@ -28,10 +28,7 @@ export class Holidays extends Entity {
   type: string;
 
   @property({
-    type: 'string',
-    jsonSchema: {
-      pattern: '^(api|manual)$',
-    },
+    type: 'string'
   })
   origin?: string;
   
@@ -50,12 +47,12 @@ export class Holidays extends Entity {
   @property({
     type: 'date',
   })
-  createdAt?: string;
+  createdAt?: Date;
 
   @property({
     type: 'date',
   })
-  updatedAt?: string;
+  updatedAt?: Date;
 
   constructor(data?: Partial<Holidays>) {
     super(data);
