@@ -3,7 +3,7 @@ import { Holidays } from '../models/holidays.model';
 
 @injectable({scope: BindingScope.TRANSIENT})
 export class ApiChileTranformerService {
-  private country: string = 'Chile';
+  private country: string = 'cl';
   private origin: string = 'ApiChile';
 
   constructor(/* Add @inject to inject parameters */) {}
