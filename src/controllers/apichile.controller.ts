@@ -9,7 +9,7 @@ export class ApichileController {
     @inject('services.ApiChileTranformerService') protected apiChileTranformerService: ApiChileTranformerService
   ) { }
 
-  @get('/holidays/{year}')
+  @get('/chile/{year}')
   async HolidaysByYear(@param.path.string('year') year: number): Promise<any> {
     return await this.callApichile(year);
   }
