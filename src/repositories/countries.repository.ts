@@ -1,6 +1,6 @@
 import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
-import {DbDataSource} from '../datasources';
+import {MongoHolidaysDataSource} from '../datasources';
 import {Countries, CountriesRelations} from '../models';
 
 export class CountriesRepository extends DefaultCrudRepository<
@@ -9,7 +9,7 @@ export class CountriesRepository extends DefaultCrudRepository<
   CountriesRelations
 > {
   constructor(
-    @inject('datasources.db') dataSource: DbDataSource,
+    @inject('datasources.mongoHolidays') dataSource: MongoHolidaysDataSource,
   ) {
     super(Countries, dataSource);
   }
