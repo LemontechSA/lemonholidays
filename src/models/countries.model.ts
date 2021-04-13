@@ -5,8 +5,7 @@ export class Countries extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: false,
-    defaultFn: "guid"
+    generated: true,
   })
   id?: string;
 
@@ -21,6 +20,18 @@ export class Countries extends Entity {
     required: true,
   })
   code: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  origin: string;
+
+  @property({
+    type: 'string',
+    required: true
+  })
+  googleCode: string;
 
   constructor(data?: Partial<Countries>) {
     super(data);
