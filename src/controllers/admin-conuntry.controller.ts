@@ -26,7 +26,7 @@ export class ConuntryController {
     public countriesRepository : CountriesRepository,
   ) {}
 
-  @post('/countries')
+  @post('/admin/countries')
   @response(200, {
     description: 'Countries model instance',
     content: {'application/json': {schema: getModelSchemaRef(Countries)}},
@@ -47,7 +47,7 @@ export class ConuntryController {
     return this.countriesRepository.create(countries);
   }
 
-  @get('/countries/count')
+  @get('/admin/countries/count')
   @response(200, {
     description: 'Countries model count',
     content: {'application/json': {schema: CountSchema}},
@@ -58,7 +58,7 @@ export class ConuntryController {
     return this.countriesRepository.count(where);
   }
 
-  @get('/countries')
+  @get('/admin/countries')
   @response(200, {
     description: 'Array of Countries model instances',
     content: {
@@ -76,7 +76,7 @@ export class ConuntryController {
     return this.countriesRepository.find(filter);
   }
 
-  @patch('/countries')
+  @patch('/admin/countries')
   @response(200, {
     description: 'Countries PATCH success count',
     content: {'application/json': {schema: CountSchema}},
@@ -95,7 +95,7 @@ export class ConuntryController {
     return this.countriesRepository.updateAll(countries, where);
   }
 
-  @get('/countries/{id}')
+  @get('/admin/countries/{id}')
   @response(200, {
     description: 'Countries model instance',
     content: {
@@ -111,7 +111,7 @@ export class ConuntryController {
     return this.countriesRepository.findById(id, filter);
   }
 
-  @patch('/countries/{id}')
+  @patch('/admin/countries/{id}')
   @response(204, {
     description: 'Countries PATCH success',
   })
@@ -129,7 +129,7 @@ export class ConuntryController {
     await this.countriesRepository.updateById(id, countries);
   }
 
-  @put('/countries/{id}')
+  @put('/admin/countries/{id}')
   @response(204, {
     description: 'Countries PUT success',
   })
@@ -140,7 +140,7 @@ export class ConuntryController {
     await this.countriesRepository.replaceById(id, countries);
   }
 
-  @del('/countries/{id}')
+  @del('/admin/countries/{id}')
   @response(204, {
     description: 'Countries DELETE success',
   })
