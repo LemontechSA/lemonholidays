@@ -2,6 +2,7 @@ import {
   repository
 } from '@loopback/repository';
 import {
+  api,
   getModelSchemaRef, param,
   patch,
   requestBody,
@@ -10,14 +11,28 @@ import {
 import {Holidays} from '../models';
 import {HolidaysRepository} from '../repositories';
 
-
+@api({
+  basePath: '/admin/holidays',
+  paths: {
+    '/{id}': {
+      patch: {
+        operationId: 'AdminHolidayController.updateById',
+        'x-operation-name': 'updateById',
+        'x-controller-name': 'AdminHolidayController',
+        parameters: [
+          {name: 'id', schema: {type: 'string'}},
+        ],
+      },
+    },
+  },
+})
 export class AdminHolidayController {
   constructor(
     @repository(HolidaysRepository)
     public holidaysRepository : HolidaysRepository,
   ) {}
 
-  @patch('/admin/holidays/{id}')
+  @patch('/{id}')
   @response(204, {
     description: 'Admin Holiday PATCH success',
   })
@@ -26,7 +41,7 @@ export class AdminHolidayController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Holidays, {partial: true,exclude:['type','country','createdAt','id','updatedAt','origin']}),
+          schema: getModelSchemaRef(Holidays, {partial: true, exclude:['type', 'country', 'createdAt', 'id', 'updatedAt', 'origin']}),
         },
       },
     })
