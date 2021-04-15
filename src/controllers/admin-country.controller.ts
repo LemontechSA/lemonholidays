@@ -16,17 +16,81 @@ import {
   del,
   requestBody,
   response,
+  api,
 } from '@loopback/rest';
 import {Countries} from '../models';
 import {CountriesRepository} from '../repositories';
 
+@api({
+  basePath: '/admin/countries',
+  paths: {
+    '/': {
+      post: {
+        operationId: 'ConuntryController.create',
+        'x-operation-name': 'create',
+        'x-controller-name': 'ConuntryController',
+      },
+      get: {
+        operationId: 'ConuntryController.find',
+        'x-operation-name': 'find',
+        'x-controller-name': 'ConuntryController',
+      },
+      patch: {
+        operationId: 'ConuntryController.updateAll',
+        'x-operation-name': 'updateAll',
+        'x-controller-name': 'ConuntryController',
+      }
+    },
+    '/count': {
+      get: {
+        operationId: 'ConuntryController.count',
+        'x-operation-name': 'count',
+        'x-controller-name': 'ConuntryController',
+      }
+    },
+    '{id}': {
+      get: {
+        operationId: 'HolidaysController.findById',
+        'x-operation-name': 'findById',
+        'x-controller-name': 'HolidaysController',
+        parameters: [
+          {name: 'id', schema: {type: 'string'}},
+        ],
+      },
+      patch: {
+        operationId: 'ConuntryController.count',
+        'x-operation-name': 'count',
+        'x-controller-name': 'ConuntryController',
+        parameters: [
+          {name: 'id', schema: {type: 'string'}},
+        ],
+      },
+      put: {
+        operationId: 'ConuntryController.count',
+        'x-operation-name': 'count',
+        'x-controller-name': 'ConuntryController',
+        parameters: [
+          {name: 'id', schema: {type: 'string'}},
+        ],
+      },
+      del: {
+        operationId: 'ConuntryController.count',
+        'x-operation-name': 'count',
+        'x-controller-name': 'ConuntryController',
+        parameters: [
+          {name: 'id', schema: {type: 'string'}},
+        ],
+      },
+    },
+  },
+})
 export class ConuntryController {
   constructor(
     @repository(CountriesRepository)
     public countriesRepository : CountriesRepository,
   ) {}
 
-  @post('/admin/countries')
+  @post('/')
   @response(200, {
     description: 'Countries model instance',
     content: {'application/json': {schema: getModelSchemaRef(Countries)}},
@@ -47,7 +111,7 @@ export class ConuntryController {
     return this.countriesRepository.create(countries);
   }
 
-  @get('/admin/countries/count')
+  @get('/count')
   @response(200, {
     description: 'Countries model count',
     content: {'application/json': {schema: CountSchema}},
@@ -58,7 +122,7 @@ export class ConuntryController {
     return this.countriesRepository.count(where);
   }
 
-  @get('/admin/countries')
+  @get('/')
   @response(200, {
     description: 'Array of Countries model instances',
     content: {
@@ -76,7 +140,7 @@ export class ConuntryController {
     return this.countriesRepository.find(filter);
   }
 
-  @patch('/admin/countries')
+  @patch('/')
   @response(200, {
     description: 'Countries PATCH success count',
     content: {'application/json': {schema: CountSchema}},
@@ -95,7 +159,7 @@ export class ConuntryController {
     return this.countriesRepository.updateAll(countries, where);
   }
 
-  @get('/admin/countries/{id}')
+  @get('/{id}')
   @response(200, {
     description: 'Countries model instance',
     content: {
@@ -111,7 +175,7 @@ export class ConuntryController {
     return this.countriesRepository.findById(id, filter);
   }
 
-  @patch('/admin/countries/{id}')
+  @patch('/{id}')
   @response(204, {
     description: 'Countries PATCH success',
   })
@@ -129,7 +193,7 @@ export class ConuntryController {
     await this.countriesRepository.updateById(id, countries);
   }
 
-  @put('/admin/countries/{id}')
+  @put('/{id}')
   @response(204, {
     description: 'Countries PUT success',
   })
@@ -140,11 +204,13 @@ export class ConuntryController {
     await this.countriesRepository.replaceById(id, countries);
   }
 
-  @del('/admin/countries/{id}')
+  @del('/{id}')
   @response(204, {
     description: 'Countries DELETE success',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
+  async deleteById(
+    @param.path.string('id') id: string
+  ): Promise<void> {
     await this.countriesRepository.deleteById(id);
   }
 }

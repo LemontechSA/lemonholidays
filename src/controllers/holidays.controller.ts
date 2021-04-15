@@ -4,17 +4,34 @@ import {
   get,
   getModelSchemaRef,
   response,
+  api,
 } from '@loopback/rest';
 import {Holidays} from '../models';
 import {HolidaysRepository} from '../repositories';
 
+@api({
+  basePath: '/holidays',
+  paths: {
+    '/{country}': {
+      get: {
+        operationId: 'HolidaysController.find',
+        'x-operation-name': 'find',
+        'x-controller-name': 'HolidaysController',
+        parameters: [
+          {name: 'country', schema: {type: 'string'}},
+          {name: 'year', schema: {type: 'number'}, in: 'query'}
+        ],
+      },
+    },
+  },
+})
 export class HolidaysController {
   constructor(
     @repository(HolidaysRepository)
     public holidaysRepository : HolidaysRepository,
   ) {}
 
-  @get('/holidays/{country}')
+  @get('/{country}')
   @response(200, {
     description: 'Array of Holidays model instances',
     content: {
