@@ -26,26 +26,26 @@ import {CountriesRepository} from '../repositories';
   paths: {
     '/': {
       post: {
-        operationId: 'ConuntryController.create',
+        operationId: 'CountryController.create',
         'x-operation-name': 'create',
-        'x-controller-name': 'ConuntryController',
+        'x-controller-name': 'CountryController',
       },
       get: {
-        operationId: 'ConuntryController.find',
+        operationId: 'CountryController.find',
         'x-operation-name': 'find',
-        'x-controller-name': 'ConuntryController',
+        'x-controller-name': 'CountryController',
       },
       patch: {
-        operationId: 'ConuntryController.updateAll',
+        operationId: 'CountryController.updateAll',
         'x-operation-name': 'updateAll',
-        'x-controller-name': 'ConuntryController',
+        'x-controller-name': 'CountryController',
       }
     },
     '/count': {
       get: {
-        operationId: 'ConuntryController.count',
+        operationId: 'CountryController.count',
         'x-operation-name': 'count',
-        'x-controller-name': 'ConuntryController',
+        'x-controller-name': 'CountryController',
       }
     },
     '{id}': {
@@ -58,25 +58,25 @@ import {CountriesRepository} from '../repositories';
         ],
       },
       patch: {
-        operationId: 'ConuntryController.count',
+        operationId: 'CountryController.count',
         'x-operation-name': 'count',
-        'x-controller-name': 'ConuntryController',
+        'x-controller-name': 'CountryController',
         parameters: [
           {name: 'id', schema: {type: 'string'}},
         ],
       },
       put: {
-        operationId: 'ConuntryController.count',
+        operationId: 'CountryController.count',
         'x-operation-name': 'count',
-        'x-controller-name': 'ConuntryController',
+        'x-controller-name': 'CountryController',
         parameters: [
           {name: 'id', schema: {type: 'string'}},
         ],
       },
       del: {
-        operationId: 'ConuntryController.count',
+        operationId: 'CountryController.count',
         'x-operation-name': 'count',
-        'x-controller-name': 'ConuntryController',
+        'x-controller-name': 'CountryController',
         parameters: [
           {name: 'id', schema: {type: 'string'}},
         ],
@@ -84,7 +84,7 @@ import {CountriesRepository} from '../repositories';
     },
   },
 })
-export class ConuntryController {
+export class CountryController {
   constructor(
     @repository(CountriesRepository)
     public countriesRepository : CountriesRepository,
