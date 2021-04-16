@@ -10,6 +10,7 @@ import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
 import {CronUpdateHolidays} from './components/cron.component';
+import {AuthenticationComponent} from '@loopback/authentication';
 
 require('dotenv').config();
 
@@ -48,5 +49,7 @@ export class LemonholidaysApplication extends BootMixin(
         nested: true,
       },
     };
-  }
+
+    this.component(AuthenticationComponent);
+  }  
 }
