@@ -12,7 +12,7 @@ export class GoogleCalProvider {
 
   async holidayEvents(year: number, country: string) {
     const calendar = google.calendar('v3');
-    const apiKey = process.env.API_KEY_GOOGLE ?? ''
+    const apiKey = process.env.GOOGLE_API_KEY ?? ''
     const auth = google.auth.fromAPIKey(apiKey);
     google.options({ auth });
     const timeMax = `${year}-12-31T23:59:59Z`;
