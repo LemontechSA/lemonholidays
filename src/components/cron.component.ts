@@ -1,19 +1,20 @@
-import {CronJob, cronJob} from '@loopback/cron';
+import { repository } from '@loopback/repository';
+import { HolidaysRepository } from '../repositories';
+const cron = require('node-cron');
 
-@cronJob()
-export class CronUpdateHolidays extends CronJob {
-  constructor() {
-    super({
-      name: 'update-holidays',
-      onTick: () => {
-        this.updateHoliday();
-      },
-      cronTime: '*/10 * * * * *', // Cada 10 segundos
-      start: true,
+export class CronComponent {
+  constructor(
+    @repository(HolidaysRepository)
+    public holidaysRepository: HolidaysRepository,
+  ) {
+  }
+
+  async start() {
+    cron.schedule(process.env.CRON_SCHEDULE, async () => {
+      const date: Date = new Date();
+      console.log('Update Holiday is running 🥳. ' + date);
+      await this.holidaysRepository.createOrUpdate();
     });
   }
-  updateHoliday() {
-    const date : Date = new Date();
-    console.log('Update Holiday is running 🥳. '+ date);
-  }
+
 }

@@ -1,30 +1,25 @@
-import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
+import { BootMixin } from '@loopback/boot';
+import { ApplicationConfig } from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
-import {ServiceMixin} from '@loopback/service-proxy';
+import { RepositoryMixin } from '@loopback/repository';
+import { RestApplication } from '@loopback/rest';
+import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
-import {MySequence} from './sequence';
-import {CronUpdateHolidays} from './components/cron.component';
+import { MySequence } from './sequence';
 
 require('dotenv').config();
 
 
-export {ApplicationConfig};
+export { ApplicationConfig };
 
 export class LemonholidaysApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
-    //cron component
-    if(process.env.RUN_CRON === 'true'){
-      this.component(CronUpdateHolidays);
-    }
 
     // Set up the custom sequence
     this.sequence(MySequence);
