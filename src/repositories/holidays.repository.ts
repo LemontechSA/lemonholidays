@@ -57,9 +57,10 @@ export class HolidaysRepository extends DefaultCrudRepository<
       const countItem = await this.find({ where: { country: country.code } });
       if (countItem.length === 0) {
         await this.createAllByCountry(new Date().getFullYear(), country.code, country.origin);
-      } else {
-        await this.updateAllByCountry(country.code, country.origin);
+        continue;
       }
+
+      await this.updateAllByCountry(country.code, country.origin);
     }
     return null;
   }
@@ -110,17 +111,18 @@ export class HolidaysRepository extends DefaultCrudRepository<
           if (holiday.date >= currentDay) {
             await this.create(holiday);
           }
-        } else {
-
-          //si existe en la base de datos, el feriado se desactiva si el origen es distinto a Manual y mayor o igual a la fecha actual
-          //ademas se crea un nuevo feriado
-          if (holidayFind.origin !== 'Manual' && holidayFind.date >= currentDay) {
-            holidayFind.active = false;
-            holidayFind.updatedAt = new Date();
-            await this.updateById(holidayFind.id, holidayFind);
-            await this.create(holiday);
-          }
+          continue;
         }
+
+        //si existe en la base de datos, el feriado se desactiva si el origen es distinto a Manual y mayor o igual a la fecha actual
+        //ademas se crea un nuevo feriado
+        if (holidayFind.origin !== 'Manual' && holidayFind.date >= currentDay) {
+          holidayFind.active = false;
+          holidayFind.updatedAt = new Date();
+          await this.updateById(holidayFind.id, holidayFind);
+          await this.create(holiday);
+        }
+
       }
     }
 
