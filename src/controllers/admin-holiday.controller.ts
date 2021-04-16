@@ -8,8 +8,8 @@ import {
   requestBody,
   response
 } from '@loopback/rest';
-import {Holidays} from '../models';
-import {HolidaysRepository} from '../repositories';
+import { Holidays } from '../models';
+import { HolidaysRepository } from '../repositories';
 
 @api({
   basePath: '/admin/holidays',
@@ -20,7 +20,7 @@ import {HolidaysRepository} from '../repositories';
         'x-operation-name': 'updateById',
         'x-controller-name': 'AdminHolidayController',
         parameters: [
-          {name: 'id', schema: {type: 'string'}},
+          { name: 'id', schema: { type: 'string' } },
         ],
       },
     },
@@ -29,8 +29,8 @@ import {HolidaysRepository} from '../repositories';
 export class AdminHolidayController {
   constructor(
     @repository(HolidaysRepository)
-    public holidaysRepository : HolidaysRepository,
-  ) {}
+    public holidaysRepository: HolidaysRepository,
+  ) { }
 
   @patch('/{id}')
   @response(204, {
@@ -41,13 +41,13 @@ export class AdminHolidayController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Holidays, {partial: true, exclude:['type', 'country', 'createdAt', 'id', 'updatedAt', 'origin']}),
+          schema: getModelSchemaRef(Holidays, { partial: true, exclude: ['type', 'country', 'createdAt', 'id', 'updatedAt', 'origin'] }),
         },
       },
     })
     holidays: Holidays,
   ): Promise<void> {
-    holidays.origin = 'manual';
+    holidays.origin = 'Manual';
     holidays.updatedAt = new Date();
     await this.holidaysRepository.updateById(id, holidays);
   }

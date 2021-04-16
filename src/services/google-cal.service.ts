@@ -1,18 +1,32 @@
-import {injectable, BindingScope} from '@loopback/core';
-import {google} from 'googleapis';
+import { injectable, BindingScope, inject } from '@loopback/core';
+import { google } from 'googleapis';
+import { CountriesRepository } from '../repositories';
 
-@injectable({scope: BindingScope.TRANSIENT})
+
+@injectable({ scope: BindingScope.TRANSIENT })
 export class GoogleCalProvider {
-  constructor() {}
+  constructor(
+    @inject('repositories.CountriesRepository')
+    private countriesRepository: CountriesRepository
+  ) { }
 
   async holidayEvents(year: number, country: string) {
     const calendar = google.calendar('v3');
-    const apiKey = process.env.GOOGLE_API_KEY ?? ''
+    const apiKey = process.env.API_KEY_GOOGLE ?? ''
     const auth = google.auth.fromAPIKey(apiKey);
-    google.options({auth});
+    google.options({ auth });
     const timeMax = `${year}-12-31T23:59:59Z`;
     const timeMin = `${year}-01-01T00:00:00Z`;
-    const calendarId = `es.${country}#holiday@group.v.calendar.google.com`;
+    const countries = await this.countriesRepository.findOne({
+      where: {
+        and: [
+          {
+            code: country
+          },
+        ]
+      }
+    });
+    const calendarId = `es.${countries?.googleCode ?? country}#holiday@group.v.calendar.google.com`;
     const list = await calendar.events.list({
       calendarId,
       timeMin,
