@@ -10,7 +10,7 @@ export class CronComponent {
   }
 
   async start() {
-    cron.schedule('0 20 3 */16 * *', async () => {
+    cron.schedule(process.env.CRON_SCHEDULE, async () => {
       const date: Date = new Date();
       console.log('Update Holiday is running 🥳. ' + date);
       await this.holidaysRepository.createOrUpdate();
