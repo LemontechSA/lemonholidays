@@ -85,6 +85,8 @@ export class HolidaysRepository extends DefaultCrudRepository<
     const year = new Date().getFullYear();
     const first = new Date(`${year}-01-01T00:00:00Z`);
     const last = new Date(`${year}-12-31T23:59:59Z`);
+    const currentDay = new Date();
+    currentDay.setHours(0, 0, 0, 0);
 
     const holidays = await this.find({
       order: ["date ASC"],
@@ -103,15 +105,16 @@ export class HolidaysRepository extends DefaultCrudRepository<
             active: true
           }
         });
-
-        //si el feriado no se encuentra en la base de datos se crea
+        //si el feriado de la Api no se encuentra en base de datos y es mayor o igual a la fecha actual se crea
         if (holidayFind === null) {
-          await this.create(holiday);
+          if (holiday.date >= currentDay) {
+            await this.create(holiday);
+          }
         } else {
 
-          //si existe en la base de datos, se desactiva si el origen es distinto a Manual
-          //y se crea el nuevo feriado
-          if (holidayFind.origin !== 'Manual') {
+          //si existe en la base de datos, el feriado se desactiva si el origen es distinto a Manual y mayor o igual a la fecha actual
+          //ademas se crea un nuevo feriado
+          if (holidayFind.origin !== 'Manual' && holidayFind.date >= currentDay) {
             holidayFind.active = false;
             holidayFind.updatedAt = new Date();
             await this.updateById(holidayFind.id, holidayFind);
@@ -123,10 +126,10 @@ export class HolidaysRepository extends DefaultCrudRepository<
 
     //Busco si hay feriados en la base de datos que no existan en las apis
     const missingHolidays = holidays.filter(this.diff(holidaysApi));
-    //si existen los desactivo si su origen es distinto a Manual
+    //si existen los desactivo si su origen es distinto a Manual y es mayor o igual a la fecha actual
     if (missingHolidays.length > 0) {
       for (const holiday of missingHolidays) {
-        if (holiday.origin !== 'Manual') {
+        if (holiday.origin !== 'Manual' && holiday.date >= currentDay) {
           holiday.active = false;
           holiday.updatedAt = new Date();
           await this.update(holiday);
