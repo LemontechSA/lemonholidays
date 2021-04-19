@@ -1,5 +1,8 @@
-import {ApplicationConfig, LemonholidaysApplication} from './application';
+import { ApplicationConfig, LemonholidaysApplication } from './application';
 import dotenv from 'dotenv';
+import { CronComponent } from './components';
+// import { HolidaysController } from './controllers';
+import { HolidaysRepository } from './repositories';
 
 dotenv.config();
 
@@ -13,6 +16,13 @@ export async function main(options: ApplicationConfig = {}) {
   const url = app.restServer.url;
   console.log(`Server is running at ${url}`);
   console.log(`Try ${url}/ping`);
+
+  const holidaysRepository = app.repository(HolidaysRepository);
+  const holidaysRepositoryInstance = await holidaysRepository.getValue(app);
+  const cron = new CronComponent(holidaysRepositoryInstance);
+  if (process.env.RUN_CRON === 'true') {
+    await cron.start();
+  }
 
   return app;
 }
