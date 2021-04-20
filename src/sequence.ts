@@ -6,12 +6,9 @@ export class MySequence extends DefaultSequence {
         Sentry.init({
             dsn: process.env.DNS_SENTRY,
             tracesSampleRate: 1.0,
-            environment: "production"
+            environment: process.env.ENVIRONMENT
         });
-        const transaction = Sentry.startTransaction({
-            op: "transaction",
-            name: "My Transaction",
-        });
+
         try {
             // Invoke registered Express middleware
             const finished = await this.invokeMiddleware(context);
@@ -30,8 +27,6 @@ export class MySequence extends DefaultSequence {
         } catch (error) {
             Sentry.captureException(error);
             this.reject(context, error);
-        } finally {
-            transaction.finish();
         }
     }
 }
