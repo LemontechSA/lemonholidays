@@ -1,7 +1,6 @@
 import { ApplicationConfig, LemonholidaysApplication } from './application';
 import dotenv from 'dotenv';
 import { CronComponent } from './components';
-// import { HolidaysController } from './controllers';
 import { HolidaysRepository } from './repositories';
 
 dotenv.config();
