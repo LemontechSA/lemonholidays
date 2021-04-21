@@ -43,7 +43,5 @@ export class LemonholidaysApplication extends BootMixin(
         nested: true,
       },
     };
-
-    this.component(AuthenticationComponent);
-  }  
+  }
 }
