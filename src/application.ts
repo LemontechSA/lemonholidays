@@ -9,6 +9,8 @@ import { RestApplication } from '@loopback/rest';
 import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
 import { MySequence } from './sequence';
+import { appKeyMiddleware } from './middleware/appkey.middleware';
+import { logMiddleware } from './middleware/log.middleware';
 
 require('dotenv').config();
 
@@ -43,5 +45,8 @@ export class LemonholidaysApplication extends BootMixin(
         nested: true,
       },
     };
+
+    this.middleware(appKeyMiddleware);
+    this.middleware(logMiddleware);
   }
 }
