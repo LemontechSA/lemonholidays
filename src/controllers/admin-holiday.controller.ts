@@ -1,3 +1,4 @@
+import { authenticate } from '@loopback/authentication';
 import {
   repository
 } from '@loopback/repository';
@@ -32,6 +33,7 @@ export class AdminHolidayController {
     public holidaysRepository: HolidaysRepository,
   ) { }
 
+  @authenticate('jwt')
   @patch('/{id}')
   @response(204, {
     description: 'Admin Holiday PATCH success',
