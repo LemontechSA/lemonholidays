@@ -17,6 +17,7 @@ import {
   UserServiceBindings,
   TokenServiceBindings
 } from '@loopback/authentication-jwt';
+import { logMiddleware } from './middleware/log.middleware';
 
 
 
@@ -56,6 +57,6 @@ export class LemonholidaysApplication extends BootMixin(
         nested: true,
       },
     };
-
+    this.middleware(logMiddleware);
   }
 }

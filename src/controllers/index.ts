@@ -4,5 +4,6 @@ export * from './apichile.controller';
 export * from './google.controller';
 export * from './holidays.controller';
 export * from './admin-holiday.controller';
+export * from './admin-applications.controller';
 export * from './user.controller';
 
