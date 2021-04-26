@@ -36,7 +36,7 @@ export class LemonholidaysApplication extends BootMixin(
     this.dataSource(MongoHolidaysDataSource, UserServiceBindings.DATASOURCE_NAME);
     this.bind(TokenServiceBindings.TOKEN_SECRET).to(process.env.JWT_SECRET ?? 'T0K3N_S3CR3T');
     // for jwt access token expiration in sec
-    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(process.env.JWT_EXPIRES_IN ?? '10');
+    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(process.env.JWT_EXPIRES_IN ?? '60');
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
