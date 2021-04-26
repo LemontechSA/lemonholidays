@@ -12,11 +12,10 @@ export const logMiddleware: Middleware = async (middlewareCtx: MiddlewareContext
     const result = await next();
     return result;
   } catch (error) {
-    if (error.message === 'Unauthorized') {
-      middlewareCtx.response.status(401).json({code: 401, status: 'Unauthorized!'});
-    } else {
+    if (error.message !== 'Unauthorized') {
       Sentry.captureException(error);
       throw error;
     }
+    middlewareCtx.response.status(401).json({code: 401, status: 'Unauthorized!'});
   }
 }
