@@ -1,3 +1,4 @@
+import { authenticate } from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -18,8 +19,8 @@ import {
   response,
   api,
 } from '@loopback/rest';
-import {Countries} from '../models';
-import {CountriesRepository} from '../repositories';
+import { Countries } from '../models';
+import { CountriesRepository } from '../repositories';
 
 @api({
   basePath: '/admin/countries',
@@ -54,7 +55,7 @@ import {CountriesRepository} from '../repositories';
         'x-operation-name': 'findById',
         'x-controller-name': 'HolidaysController',
         parameters: [
-          {name: 'id', schema: {type: 'string'}},
+          { name: 'id', schema: { type: 'string' } },
         ],
       },
       patch: {
@@ -62,7 +63,7 @@ import {CountriesRepository} from '../repositories';
         'x-operation-name': 'count',
         'x-controller-name': 'CountryController',
         parameters: [
-          {name: 'id', schema: {type: 'string'}},
+          { name: 'id', schema: { type: 'string' } },
         ],
       },
       put: {
@@ -70,7 +71,7 @@ import {CountriesRepository} from '../repositories';
         'x-operation-name': 'count',
         'x-controller-name': 'CountryController',
         parameters: [
-          {name: 'id', schema: {type: 'string'}},
+          { name: 'id', schema: { type: 'string' } },
         ],
       },
       del: {
@@ -78,7 +79,7 @@ import {CountriesRepository} from '../repositories';
         'x-operation-name': 'count',
         'x-controller-name': 'CountryController',
         parameters: [
-          {name: 'id', schema: {type: 'string'}},
+          { name: 'id', schema: { type: 'string' } },
         ],
       },
     },
@@ -87,13 +88,14 @@ import {CountriesRepository} from '../repositories';
 export class CountryController {
   constructor(
     @repository(CountriesRepository)
-    public countriesRepository : CountriesRepository,
-  ) {}
+    public countriesRepository: CountriesRepository,
+  ) { }
 
+  @authenticate('jwt')
   @post('/')
   @response(200, {
     description: 'Countries model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Countries)}},
+    content: { 'application/json': { schema: getModelSchemaRef(Countries) } },
   })
   async create(
     @requestBody({
@@ -111,10 +113,11 @@ export class CountryController {
     return this.countriesRepository.create(countries);
   }
 
+  @authenticate('jwt')
   @get('/count')
   @response(200, {
     description: 'Countries model count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async count(
     @param.where(Countries) where?: Where<Countries>,
@@ -122,6 +125,7 @@ export class CountryController {
     return this.countriesRepository.count(where);
   }
 
+  @authenticate('jwt')
   @get('/')
   @response(200, {
     description: 'Array of Countries model instances',
@@ -129,7 +133,7 @@ export class CountryController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(Countries, {includeRelations: true}),
+          items: getModelSchemaRef(Countries, { includeRelations: true }),
         },
       },
     },
@@ -140,16 +144,17 @@ export class CountryController {
     return this.countriesRepository.find(filter);
   }
 
+  @authenticate('jwt')
   @patch('/')
   @response(200, {
     description: 'Countries PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async updateAll(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Countries, {partial: true}),
+          schema: getModelSchemaRef(Countries, { partial: true }),
         },
       },
     })
@@ -159,22 +164,24 @@ export class CountryController {
     return this.countriesRepository.updateAll(countries, where);
   }
 
+  @authenticate('jwt')
   @get('/{id}')
   @response(200, {
     description: 'Countries model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(Countries, {includeRelations: true}),
+        schema: getModelSchemaRef(Countries, { includeRelations: true }),
       },
     },
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Countries, {exclude: 'where'}) filter?: FilterExcludingWhere<Countries>
+    @param.filter(Countries, { exclude: 'where' }) filter?: FilterExcludingWhere<Countries>
   ): Promise<Countries> {
     return this.countriesRepository.findById(id, filter);
   }
 
+  @authenticate('jwt')
   @patch('/{id}')
   @response(204, {
     description: 'Countries PATCH success',
@@ -184,7 +191,7 @@ export class CountryController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Countries, {partial: true}),
+          schema: getModelSchemaRef(Countries, { partial: true }),
         },
       },
     })
@@ -193,6 +200,7 @@ export class CountryController {
     await this.countriesRepository.updateById(id, countries);
   }
 
+  @authenticate('jwt')
   @put('/{id}')
   @response(204, {
     description: 'Countries PUT success',
@@ -204,6 +212,7 @@ export class CountryController {
     await this.countriesRepository.replaceById(id, countries);
   }
 
+  @authenticate('jwt')
   @del('/{id}')
   @response(204, {
     description: 'Countries DELETE success',

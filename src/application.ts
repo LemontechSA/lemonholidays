@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { BootMixin } from '@loopback/boot';
 import { ApplicationConfig } from '@loopback/core';
 import {
@@ -9,10 +10,14 @@ import { RestApplication } from '@loopback/rest';
 import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
 import { MySequence } from './sequence';
+import { MongoHolidaysDataSource } from './datasources';
+import { AuthenticationComponent } from '@loopback/authentication';
+import {
+  JWTAuthenticationComponent,
+  UserServiceBindings,
+  TokenServiceBindings
+} from '@loopback/authentication-jwt';
 import { logMiddleware } from './middleware/log.middleware';
-
-require('dotenv').config();
-
 
 export { ApplicationConfig };
 
@@ -24,6 +29,17 @@ export class LemonholidaysApplication extends BootMixin(
 
     // Set up the custom sequence
     this.sequence(MySequence);
+    this.component(AuthenticationComponent);
+    this.component(JWTAuthenticationComponent);
+    this.dataSource(MongoHolidaysDataSource, UserServiceBindings.DATASOURCE_NAME);
+    this.middleware(logMiddleware);
+
+    if (process.env.JWT_SECRET === undefined) {
+      throw new Error('Undefined environment variable JWT_SECRET');
+    }
+    this.bind(TokenServiceBindings.TOKEN_SECRET).to(process.env.JWT_SECRET);
+    // for jwt access token expiration in sec
+    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(process.env.JWT_EXPIRES_IN ?? '60');
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
@@ -44,7 +60,5 @@ export class LemonholidaysApplication extends BootMixin(
         nested: true,
       },
     };
-
-    this.middleware(logMiddleware);
   }
 }
