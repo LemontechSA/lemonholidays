@@ -19,8 +19,6 @@ import {
 } from '@loopback/authentication-jwt';
 import { logMiddleware } from './middleware/log.middleware';
 
-
-
 export { ApplicationConfig };
 
 export class LemonholidaysApplication extends BootMixin(
@@ -34,7 +32,12 @@ export class LemonholidaysApplication extends BootMixin(
     this.component(AuthenticationComponent);
     this.component(JWTAuthenticationComponent);
     this.dataSource(MongoHolidaysDataSource, UserServiceBindings.DATASOURCE_NAME);
-    this.bind(TokenServiceBindings.TOKEN_SECRET).to(process.env.JWT_SECRET ?? 'T0K3N_S3CR3T');
+    this.middleware(logMiddleware);
+
+    if (process.env.JWT_SECRET === undefined) {
+      throw new Error('Undefined environment variable JWT_SECRET');
+    }
+    this.bind(TokenServiceBindings.TOKEN_SECRET).to(process.env.JWT_SECRET);
     // for jwt access token expiration in sec
     this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(process.env.JWT_EXPIRES_IN ?? '60');
 
@@ -57,6 +60,5 @@ export class LemonholidaysApplication extends BootMixin(
         nested: true,
       },
     };
-    this.middleware(logMiddleware);
   }
 }
