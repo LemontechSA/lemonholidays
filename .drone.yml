@@ -15,7 +15,7 @@ steps:
   #   - git checkout ${DRONE_SOURCE_BRANCH}
 
   - name: run-test
-    image: node:10-slim
+    image: node:fermium
     environment:
       ENVIRONMENT: test
     commands:
