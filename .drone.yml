@@ -20,7 +20,7 @@ steps:
       ENVIRONMENT: test
     commands:
       - cp .env.example .env
-      - npm intall -g npm
+      - npm install -g npm
       - npm install
       - npm build
       - npm test
