@@ -1,0 +1,120 @@
+---
+kind: pipeline
+type: kubernetes
+name: pr-analysis
+
+clone:
+  disable: false
+
+steps:
+
+  # - name: clone
+  #   image: alpine/git
+  #   commands:
+  #   - git clone ${DRONE_REMOTE_URL} .
+  #   - git checkout ${DRONE_SOURCE_BRANCH}
+
+  - name: run-test
+    image: node:10-slim
+    environment:
+      ENVIRONMENT: test
+    commands:
+      - cp .env.example .env
+      - npm install
+      - npm build
+      - npm test
+
+  # - name: sonarscanner
+  #   image: sonarsource/sonar-scanner-cli
+  #   environment:
+  #     SONAR_HOST:
+  #       from_secret: SONAR_HOST
+  #     SONAR_TOKEN:
+  #       from_secret: SONAR_TOKEN
+  #   commands:
+  #     - sonar-scanner -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_TOKEN} -Dsonar.projectKey=${DRONE_REPO/\//_} -Dsonar.projectName=${DRONE_REPO} -Dsonar.pullrequest.key=${DRONE_PULL_REQUEST} -Dsonar.pullrequest.branch=${DRONE_SOURCE_BRANCH} -Dsonar.pullrequest.base=${DRONE_TARGET_BRANCH}
+services:
+   # MySQL service
+   - name: mongo
+     image: mongo
+     environment:
+       MONGO_INITDB_ROOT_USERNAME: root
+       MONGO_INITDB_ROOT_PASSWORD: root
+       MONGO_INITDB_DATABASE: lemonholidays
+     ports:
+       - 21017
+trigger:
+  branch:
+    - chore/drone-docker
+  # ref:
+  #   - refs/pull/*/head
+
+---
+kind: pipeline
+type: kubernetes
+name: deploy-to-production
+
+steps:
+  - name: run-test
+    image: ruby:2.6.1
+    environment:
+      RAILS_ENV: test
+    commands:
+      - gem install bundler -v 2.0.2 && bundle install --deployment
+      - bundle exec rake test
+
+  - name: sonarscanner
+    image: sonarsource/sonar-scanner-cli
+    environment:
+      SONAR_HOST:
+        from_secret: SONAR_HOST
+      SONAR_TOKEN:
+        from_secret: SONAR_TOKEN
+    commands:
+      - sonar-scanner -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_TOKEN} -Dsonar.projectKey=${DRONE_REPO/\//_} -Dsonar.projectName=${DRONE_REPO} -Dsonar.branch.name=${DRONE_SOURCE_BRANCH}
+
+  - name: ecr-publish
+    image: plugins/ecr
+    settings:
+      dockerfile: automation/Dockerfile
+      access_key:
+        from_secret: DEPLOY_ACCESS_KEY
+      secret_key:
+        from_secret: DEPLOY_SECRET_KEY
+      repo: lemontech/lemonholidays
+      registry: 786298960439.dkr.ecr.us-east-1.amazonaws.com
+      region: us-east-1
+      tags:
+        - latest
+        - ${DRONE_TAG}
+
+  - name: ecs-deploy
+    image: alpine:3.8
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: DEPLOY_ACCESS_KEY
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: DEPLOY_SECRET_KEY
+    commands:
+      - apk --no-cache add ca-certificates curl bash jq py2-pip && pip install awscli
+      - curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | tee /usr/bin/ecs-deploy
+      - chmod +x /usr/bin/ecs-deploy
+      - ecs-deploy -r us-east-1 -D 1 -c internal-apps -n holidays-production -i '786298960439.dkr.ecr.us-east-1.amazonaws.com/lemontech/holidays:${DRONE_TAG}' --skip-deployments-check -t 240
+
+  - name: eks-deploy
+    image: sinlead/drone-kubectl
+    settings:
+      kubernetes_server:
+        from_secret: K8S_SERVER
+      kubernetes_token:
+        from_secret: K8S_TOKEN
+    commands:
+      - kubectl set image deployment/holidays 	holidays="786298960439.dkr.ecr.us-east-1.amazonaws.com/lemontech/holidays:${DRONE_TAG}"  --record=true --namespace holidays
+      - kubectl rollout status deployment/holidays --namespace holidays
+    depends_on:
+      - ecr-publish
+trigger:
+  branch:
+  - master
+  event:
+  - tag
