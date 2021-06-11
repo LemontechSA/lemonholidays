@@ -1,6 +1,10 @@
 # Check out https://hub.docker.com/_/node to select a new base image
 FROM node:10-slim
 
+LABEL maintainer="DevOps LET <devops@lemontech.com>"
+LABEL app="lemonholidays"
+LABEL environment=${NODE_ENV}
+
 # Set to a non-root built-in user `node`
 USER node
 
