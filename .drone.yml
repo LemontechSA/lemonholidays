@@ -15,11 +15,12 @@ steps:
   #   - git checkout ${DRONE_SOURCE_BRANCH}
 
   - name: run-test
-    image: node:14.15-slim
+    image: node:fermium
     environment:
       ENVIRONMENT: test
     commands:
       - cp .env.example .env
+      - npm intall -g npm
       - npm install
       - npm build
       - npm test
