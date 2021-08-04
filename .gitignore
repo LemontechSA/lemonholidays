@@ -65,3 +65,6 @@ typings/
 
 # Environment variables
 .env
+
+# test db in memory for testing
+/data/dbtest.json
