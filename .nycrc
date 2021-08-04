@@ -1,0 +1,7 @@
+{
+  "include": ["dist"],
+  "exclude": ["dist/__tests__/"],
+  "extension": [".js", ".ts"],
+  "reporter": ["lcov", "text"],
+  "exclude-after-remap": false
+}

@@ -19,6 +19,16 @@ export async function setupApplication(): Promise<AppWithClient> {
   });
 
   await app.boot();
+
+  /**
+   * Override default config for DataSource for testing
+   */
+  app.bind('datasources.config.mongoHolidays').to({
+    name: 'dbtest',
+    connector: 'memory',
+    file: './data/dbtest.json'
+  });
+
   await app.start();
 
   const client = createRestAppClient(app);
