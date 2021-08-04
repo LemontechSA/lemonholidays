@@ -1,5 +1,6 @@
 import { inject } from '@loopback/context';
 import { get, param } from '@loopback/rest';
+import { Holidays } from '../models';
 import { GoogleCalProvider } from '../services';
 import { GoogleApiTransformerService } from '../services/google-api-transformer.service';
 
@@ -10,9 +11,8 @@ export class GoogleController {
   ) {}
 
   @get('/google/{country}/{year}')
-  async getEventList(@param.path.string('year') year: number, @param.path.string('country') country: string): Promise<any> {
+  async getEventList(@param.path.string('year') year: number, @param.path.string('country') country: string): Promise<Holidays[]> {
    const eventList = await this.googleCal.holidayEvents(year, country);
    return this.googleApiTransformerService.transformer(eventList.data, country);
-   // return eventList.data;
   }
 }

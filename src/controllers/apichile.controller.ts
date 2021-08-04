@@ -1,5 +1,6 @@
 import { inject } from '@loopback/context';
 import { get, param } from '@loopback/rest';
+import { Holidays } from '../models';
 import { ApichileService } from '../services';
 import { ApiChileTranformerService } from '../services/api-chile-tranformer.service';
 
@@ -10,11 +11,11 @@ export class ApichileController {
   ) { }
 
   @get('/chile/{year}')
-  async HolidaysByYear(@param.path.string('year') year: number): Promise<any> {
-    return await this.callApichile(year);
+  async holidaysByYear(@param.path.string('year') year: number): Promise<Holidays[]> {
+    return this.callApichile(year);
   }
-  async callApichile(year: number): Promise<any> {
-    const data = await this.apichileService.HolidaysByYear(year);
+  async callApichile(year: number): Promise<Holidays[]> {
+    const data = await this.apichileService.holidaysByYear(year);
 
     return this.apiChileTranformerService.transformer(data);
   }
