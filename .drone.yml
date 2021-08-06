@@ -19,11 +19,6 @@ steps:
     environment:
       ENVIRONMENT: test
       NODE_ENV: test
-      MONGO_HOST: mongodb://mongo:21017
-      MONGO_DB: lemonholidays
-      MONGO_USER: root
-      MONGO_PASS: root
-      MONGO_URL: mongodb://root:root@mongo:27017/lemonholidays?authSource=admin&w=1
     commands:
       - cp .env.example .env
       - npm install -g npm
@@ -40,16 +35,6 @@ steps:
         from_secret: SONAR_TOKEN
     commands:
       - sonar-scanner -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_TOKEN} -Dsonar.projectKey=${DRONE_REPO/\//_} -Dsonar.projectName=${DRONE_REPO} -Dsonar.pullrequest.key=${DRONE_PULL_REQUEST} -Dsonar.pullrequest.branch=${DRONE_SOURCE_BRANCH} -Dsonar.pullrequest.base=${DRONE_TARGET_BRANCH}
-services:
-   # Mongo service
-   - name: mongo
-     image: mongo
-     environment:
-       MONGO_INITDB_ROOT_USERNAME: root
-       MONGO_INITDB_ROOT_PASSWORD: root
-       MONGO_INITDB_DATABASE: lemonholidays
-     ports:
-       - 21017
 trigger:
   ref:
     - refs/pull/*/head
