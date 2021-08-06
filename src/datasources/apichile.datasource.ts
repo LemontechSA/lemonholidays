@@ -18,7 +18,7 @@ const config = {
         "url": "https://apis.digital.gob.cl/fl/feriados/{year}"
       },
       "functions": {
-        "HolidaysByYear": ["year"]
+        "holidaysByYear": ["year"]
       }
     }
   ]
