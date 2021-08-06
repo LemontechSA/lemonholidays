@@ -36,7 +36,7 @@ export class HolidaysRepository extends DefaultCrudRepository<
     const first = new Date(`${year}-01-01T00:00:00`);
     const last = new Date(`${year}-12-31T23:59:59`);
 
-    const result = await this.find({
+    return this.find({
       where: {
         and: [
           {
@@ -48,7 +48,7 @@ export class HolidaysRepository extends DefaultCrudRepository<
         ]
       }
     })
-    return result;
+
   }
 
   async createOrUpdate() {
@@ -76,7 +76,7 @@ export class HolidaysRepository extends DefaultCrudRepository<
       const eventList = await this.googleCal.holidayEvents(year, country);
       holidaysApi = await this.googleApiTransformerService.transformer(eventList.data, country);
     } else if (typeApi === 'APIChile') {
-      const data = await this.apichileService.HolidaysByYear(year);
+      const data = await this.apichileService.holidaysByYear(year);
       holidaysApi = await this.apiChileTranformerService.transformer(data);
     }
     return holidaysApi;
@@ -141,7 +141,7 @@ export class HolidaysRepository extends DefaultCrudRepository<
 
   }
 
-  //Metodo que retorna la diferencia entre dos array de objetos 
+  //Metodo que retorna la diferencia entre dos array de objetos
   diff(otherArray: Holidays[]) {
     return function (current: Holidays) {
       return otherArray.filter((other: Holidays) => {

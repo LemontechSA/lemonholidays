@@ -1,4 +1,4 @@
-import { inject, lifeCycleObserver, LifeCycleObserver } from '@loopback/core';
+import { inject } from '@loopback/core';
 import { juggler } from '@loopback/repository';
 
 const config = {
@@ -18,7 +18,7 @@ const config = {
         "url": "https://apis.digital.gob.cl/fl/feriados/{year}"
       },
       "functions": {
-        "HolidaysByYear": ["year"]
+        "holidaysByYear": ["year"]
       }
     }
   ]

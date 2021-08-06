@@ -7,8 +7,6 @@ export class ApiChileTranformerService {
   private country = 'cl';
   private origin = 'APIChile';
 
-  constructor(/* Add @inject to inject parameters */) { }
-
   /*
    * Add service methods here
    */

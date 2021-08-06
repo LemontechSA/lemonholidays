@@ -1,9 +1,10 @@
 import { inject, Provider } from '@loopback/core';
 import { getService } from '@loopback/service-proxy';
 import { ApichileDataSource } from '../datasources';
+import { Holidays } from '../models';
 
 export interface ApichileService {
-  HolidaysByYear(year: number): Promise<any>;
+  holidaysByYear(year: number): Promise<Holidays[]>;
 }
 
 export class ApichileServiceProvider implements Provider<ApichileService> {
