@@ -1,0 +1,96 @@
+---
+kind: pipeline
+type: kubernetes
+name: pr-analysis
+
+clone:
+  disable: true
+
+steps:
+
+  - name: clone
+    image: alpine/git
+    commands:
+    - git clone ${DRONE_REMOTE_URL} .
+    - git checkout ${DRONE_SOURCE_BRANCH}
+
+  - name: run-test
+    image: node:10-slim
+    environment:
+      ENVIRONMENT: test
+      NODE_ENV: test
+    commands:
+      - cp .env.example .env
+      - npm install -g npm
+      - npm install
+      - npm run build
+      - npm run test:coverage
+
+  - name: sonarscanner
+    image: sonarsource/sonar-scanner-cli
+    environment:
+      SONAR_HOST:
+        from_secret: SONAR_HOST
+      SONAR_TOKEN:
+        from_secret: SONAR_TOKEN
+    commands:
+      - sonar-scanner -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_TOKEN} -Dsonar.projectKey=${DRONE_REPO/\//_} -Dsonar.projectName=${DRONE_REPO} -Dsonar.pullrequest.key=${DRONE_PULL_REQUEST} -Dsonar.pullrequest.branch=${DRONE_SOURCE_BRANCH} -Dsonar.pullrequest.base=${DRONE_TARGET_BRANCH}
+trigger:
+  ref:
+    - refs/pull/*/head
+  event:
+    exclude:
+      - promote
+
+---
+kind: pipeline
+type: kubernetes
+name: merge-master
+
+steps:
+
+  - name: run-test
+    image: node:10-slim
+    environment:
+      ENVIRONMENT: test
+      NODE_ENV: test
+      MONGO_HOST: mongodb://mongo:21017
+      MONGO_DB: lemonholidays
+      MONGO_USER: root
+      MONGO_PASS: root
+      MONGO_URL: mongodb://root:root@mongo:27017/lemonholidays?authSource=admin&w=1
+    commands:
+      - cp .env.example .env
+      - npm install -g npm
+      - npm install
+      - npm run build
+      - npm run test:coverage
+
+  - name: sonarscanner
+    image: sonarsource/sonar-scanner-cli
+    environment:
+      SONAR_HOST:
+        from_secret: SONAR_HOST
+      SONAR_TOKEN:
+        from_secret: SONAR_TOKEN
+    commands:
+      - sonar-scanner -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_TOKEN} -Dsonar.projectKey=${DRONE_REPO/\//_} -Dsonar.projectName=${DRONE_REPO} -Dsonar.branch.name=${DRONE_SOURCE_BRANCH}
+
+services:
+   # Mongo service
+   - name: mongo
+     image: mongo
+     environment:
+       MONGO_INITDB_ROOT_USERNAME: root
+       MONGO_INITDB_ROOT_PASSWORD: root
+       MONGO_INITDB_DATABASE: lemonholidays
+     ports:
+       - 21017
+trigger:
+  branch:
+    - master
+  event:
+    include:
+      - push
+    exclude:
+      - promote
