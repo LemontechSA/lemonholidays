@@ -87,8 +87,10 @@ services:
      ports:
        - 21017
 trigger:
-  ref:
-    - refs/pull/*/head
+  branch:
+    - master
   event:
+    include:
+      - push
     exclude:
       - promote
