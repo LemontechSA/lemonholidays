@@ -3,8 +3,7 @@ import { inject } from '@loopback/core';
 import { DefaultCrudRepository } from '@loopback/repository';
 import { MongoHolidaysDataSource } from '../datasources';
 import { Holidays, HolidaysRelations } from '../models';
-import { ApichileService, GoogleCalProvider } from '../services';
-import { ApiChileTranformerService, GoogleApiTransformerService } from '../services';
+import { ApichileService, GoogleCalProvider, GoogleApiTransformerService, ApiChileTranformerService } from '../services';
 import { CountriesRepository } from '../repositories';
 
 export class HolidaysRepository extends DefaultCrudRepository<
@@ -95,37 +94,22 @@ export class HolidaysRepository extends DefaultCrudRepository<
     })
     const holidaysApi: Holidays[] = await this.getHolidayApis(year, country, typeApi)
 
-    //busco si hay feriados en la api que no  existan en base de datos
-    const missingHolidayApi = holidaysApi.filter(this.diff(holidays));
-    if (missingHolidayApi.length > 0) {
-      for (const holiday of missingHolidayApi) {
-        const holidayFind = await this.findOne({
-          where: {
-            date: holiday.date,
-            country: holiday.country,
-            active: true
-          }
-        });
-        //si el feriado de la Api no se encuentra en base de datos y es mayor o igual a la fecha actual se crea
-        if (holidayFind === null) {
-          if (holiday.date >= currentDay) {
-            await this.create(holiday);
-          }
-          continue;
-        }
+    await this.searchingHolidaysApi(holidays, holidaysApi, currentDay);
+    await this.searchingHolidaysBD(holidays, holidaysApi, currentDay);
 
-        //si existe en la base de datos, el feriado se desactiva si el origen es distinto a Manual y mayor o igual a la fecha actual
-        //ademas se crea un nuevo feriado
-        if (holidayFind.origin !== 'Manual' && holidayFind.date >= currentDay) {
-          holidayFind.active = false;
-          holidayFind.updatedAt = new Date();
-          await this.updateById(holidayFind.id, holidayFind);
-          await this.create(holiday);
-        }
+  }
 
-      }
+  //Metodo que retorna la diferencia entre dos array de objetos
+  diff(otherArray: Holidays[]) {
+    return function (current: Holidays) {
+      return otherArray.filter((other: Holidays) => {
+        return other.name === current.name && other.country === current.country
+          && other.date.toString() === current.date.toString()
+      }).length === 0;
     }
+  }
 
+  async searchingHolidaysBD(holidays: Holidays[], holidaysApi: Holidays[], currentDay: Date) {
     //Busco si hay feriados en la base de datos que no existan en las apis
     const missingHolidays = holidays.filter(this.diff(holidaysApi));
     //si existen los desactivo si su origen es distinto a Manual y es mayor o igual a la fecha actual
@@ -138,16 +122,41 @@ export class HolidaysRepository extends DefaultCrudRepository<
         }
       }
     }
-
   }
 
-  //Metodo que retorna la diferencia entre dos array de objetos
-  diff(otherArray: Holidays[]) {
-    return function (current: Holidays) {
-      return otherArray.filter((other: Holidays) => {
-        return other.name === current.name && other.country === current.country
-          && other.date.toString() === current.date.toString()
-      }).length === 0;
+  async searchingHolidaysApi(holidays: Holidays[], holidaysApi: Holidays[], currentDay: Date) {
+    //busco si hay feriados en la api que no  existan en base de datos
+    const missingHolidayApi = holidaysApi.filter(this.diff(holidays));
+    if (missingHolidayApi.length > 0) {
+      for (const holiday of missingHolidayApi) {
+        const holidayFind = await this.findOne({
+          where: {
+            date: holiday.date,
+            country: holiday.country,
+            active: true
+          }
+        });
+        await this.createAndUpdateHolidays(holidayFind, holiday, currentDay);
+      }
+    }
+  }
+
+  async createAndUpdateHolidays(holidayFind: Holidays | null, holiday: Holidays, currentDay: Date) {
+    //si el feriado de la Api no se encuentra en base de datos y es mayor o igual a la fecha actual se crea
+    if (holidayFind === null) {
+      if (holiday.date >= currentDay) {
+        await this.create(holiday);
+      }
+      return;
+    }
+
+    //si existe en la base de datos, el feriado se desactiva si el origen es distinto a Manual y mayor o igual a la fecha actual
+    //ademas se crea un nuevo feriado
+    if (holidayFind.origin !== 'Manual' && holidayFind.date >= currentDay) {
+      holidayFind.active = false;
+      holidayFind.updatedAt = new Date();
+      await this.updateById(holidayFind.id, holidayFind);
+      await this.create(holiday);
     }
   }
 
