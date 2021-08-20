@@ -16,45 +16,62 @@ describe('Acceptance Test HolidaysRepository', () => {
     });
 
     before(async () => {
-        await givenCountryInstance();
-        await givenHolidayInstance();
+        await givenHolidayRepository();
+        await givenCountryRepository();
+    });
+
+    beforeEach(async () => {
+        await givenEmptyDatabase();
+
     });
 
     after(async () => {
-        await givenEmptyDatabase();
         await app.stop();
     });
 
     it('invokes function createOrUpdate', async () => {
-        await givenHolidayRepository();
+        await givenCountryInstance();
+        await givenHolidayInstance();
+        let result = await holidaysRepository.createOrUpdate()
+        expect(result).to.equal(null);
+    });
+
+    it('invokes function createOrUpdate whitout holidays', async () => {
+        await givenCountryInstance();
         let result = await holidaysRepository.createOrUpdate()
         expect(result).to.equal(null);
     });
 
     it('invokes function createOrUpdate when country is empty', async () => {
-        await givenHolidayRepository();
+        await givenCountryInstance();
+        await givenHolidayInstance();
         let result = await holidaysRepository.createOrUpdate()
         expect(result).to.equal(null);
     });
 
     it('invokes function findByCountry', async () => {
-        await givenHolidayRepository();
+        await givenCountryInstance();
+        await givenHolidayInstance();
         let result = await holidaysRepository.findByCountry("pe", 2021)
         expect(result).to.be.eql([]);
     });
 
     it('invokes function findByCountry whitout year', async () => {
-        await givenHolidayRepository();
+        await givenCountryInstance();
+        await givenHolidayInstance();
         let result = await holidaysRepository.findByCountry("pe")
         expect(result).to.be.eql([]);
     });
 
-    async function givenCountryInstance(countries?: Partial<Countries>) {
+    async function givenCountryRepository() {
         countriesRepository = await app.getRepository(CountriesRepository);
+    }
+
+    async function givenCountryInstance(countries?: Partial<Countries>) {
         return countriesRepository.create(givenCountryData(countries));
     }
 
-    async function givenHolidayRepository(){
+    async function givenHolidayRepository() {
         holidaysRepository = await app.getRepository(HolidaysRepository);
     }
 
