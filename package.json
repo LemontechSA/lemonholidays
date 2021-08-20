@@ -35,7 +35,8 @@
     "rebuild": "npm run clean && npm run build",
     "prestart": "npm run rebuild",
     "start": "node -r source-map-support/register .",
-    "clean": "lb-clean dist *.tsbuildinfo .eslintcache"
+    "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
+    "script:import:holidays": "npm run rebuild && node dist/scripts/import-holidays.js"
   },
   "repository": {
     "type": "git",
