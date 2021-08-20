@@ -20,9 +20,8 @@ describe('Acceptance Test HolidaysRepository', () => {
         await givenCountryRepository();
     });
 
-    beforeEach(async () => {
+    afterEach(async () => {
         await givenEmptyDatabase();
-
     });
 
     after(async () => {
