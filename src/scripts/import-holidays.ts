@@ -1,5 +1,5 @@
 import { repository } from '@loopback/repository';
-import { CountriesRepository, HolidaysRepository } from '../repositories';;
+import { CountriesRepository, HolidaysRepository } from '../repositories';
 import { ApplicationConfig, LemonholidaysApplication } from '../application';
 import dotenv from 'dotenv';
 
@@ -43,8 +43,6 @@ class ImportHolidays {
     } catch (error) {
       console.log("ERROR CREATE HOLIDAYS (" + countryCode.toUpperCase() + ") IN YEAR: " + year + ":", error.message);
     }
-
-    return;
   }
 }
 
