@@ -35,15 +35,8 @@ describe('Acceptance Test HolidaysRepository', () => {
         expect(result).to.equal(null);
     });
 
-    it('invokes function createOrUpdate whitout holidays', async () => {
+    it('invokes function createOrUpdate when holidays is empty', async () => {
         await givenCountryInstance();
-        let result = await holidaysRepository.createOrUpdate()
-        expect(result).to.equal(null);
-    });
-
-    it('invokes function createOrUpdate when country is empty', async () => {
-        await givenCountryInstance();
-        await givenHolidayInstance();
         let result = await holidaysRepository.createOrUpdate()
         expect(result).to.equal(null);
     });
