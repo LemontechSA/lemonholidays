@@ -3,7 +3,7 @@ import { CountriesRepository, HolidaysRepository } from '../repositories';;
 import { ApplicationConfig, LemonholidaysApplication } from '../application';
 import dotenv from 'dotenv';
 
-class FillDbWithHolidaysScript {
+class ImportHolidays {
   constructor(
     @repository(CountriesRepository)
     public countriesRepository: CountriesRepository,
@@ -72,9 +72,9 @@ async function main(options: ApplicationConfig = {}) {
   const holidaysRepositoryInstance = await holidaysRepository.getValue(app);
   const countriesRepository = app.repository(CountriesRepository);
   const countriesRepositoryInstance = await countriesRepository.getValue(app);
-  const fillDbScript = new FillDbWithHolidaysScript(countriesRepositoryInstance, holidaysRepositoryInstance);
+  const importHolidays = new ImportHolidays(countriesRepositoryInstance, holidaysRepositoryInstance);
 
-  await fillDbScript.run();
+  await importHolidays.run();
 
   return app;
 }
