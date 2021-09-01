@@ -15,13 +15,13 @@ steps:
     - git checkout ${DRONE_SOURCE_BRANCH}
 
   - name: run-test
-    image: node:10-slim
+    image: node:14-slim
     environment:
       ENVIRONMENT: test
       NODE_ENV: test
     commands:
       - cp .env.example .env
-      - npm install -g npm
+      - npm install -g npm@latest
       - npm install
       - npm run build
       - npm run test:coverage
@@ -50,7 +50,7 @@ name: merge-master
 steps:
 
   - name: run-test
-    image: node:10-slim
+    image: node:14-slim
     environment:
       ENVIRONMENT: test
       NODE_ENV: test
@@ -61,7 +61,7 @@ steps:
       MONGO_URL: mongodb://root:root@mongo:27017/lemonholidays?authSource=admin&w=1
     commands:
       - cp .env.example .env
-      - npm install -g npm
+      - npm install -g npm@latest
       - npm install
       - npm run build
       - npm run test:coverage
