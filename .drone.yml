@@ -15,7 +15,7 @@ steps:
     - git checkout ${DRONE_SOURCE_BRANCH}
 
   - name: run-test
-    image: node:10-slim
+    image: node:14-slim
     environment:
       ENVIRONMENT: test
       NODE_ENV: test
@@ -50,7 +50,7 @@ name: merge-master
 steps:
 
   - name: run-test
-    image: node:10-slim
+    image: node:14-slim
     environment:
       ENVIRONMENT: test
       NODE_ENV: test
