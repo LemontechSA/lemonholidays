@@ -94,3 +94,39 @@ trigger:
       - push
     exclude:
       - promote
+
+---
+kind: pipeline
+type: kubernetes
+name: deploy-to-production
+
+steps:
+  - name: ecr-publish
+    image: lemontech/drone-kaniko
+    pull: always
+    settings:
+      registry: 786298960439.dkr.ecr.us-east-1.amazonaws.com
+      repo: lemontech/lemonholidays
+      cache: false
+      auto_tag: true
+      dockerfile: Dockerfile
+
+  - name: eks-deploy
+    image: sinlead/drone-kubectl
+    settings:
+      kubernetes_server:
+        from_secret: K8S_SERVER
+      kubernetes_token:
+        from_secret: K8S_TOKEN
+    commands:
+      - kubectl set image deployment/holidays 	holidays="786298960439.dkr.ecr.us-east-1.amazonaws.com/lemontech/lemonholidays:${DRONE_TAG}"  --record=true --namespace holidays
+      - kubectl rollout status deployment/holidays --namespace holidays
+    depends_on:
+      - ecr-publish
+trigger:
+  ref:
+    include:
+      - refs/tags/*
+  event:
+    exclude:
+      - promote
