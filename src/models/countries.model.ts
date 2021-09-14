@@ -37,9 +37,3 @@ export class Countries extends Entity {
     super(data);
   }
 }
-
-export interface CountriesRelations {
-  // describe navigational properties here
-}
-
-export type CountriesWithRelations = Countries & CountriesRelations;

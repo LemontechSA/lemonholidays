@@ -9,8 +9,7 @@ export const logMiddleware: Middleware = async (middlewareCtx: MiddlewareContext
     environment: process.env.ENVIRONMENT
   });
   try {
-    const result = await next();
-    return result;
+    return await next();
   } catch (error) {
     if (error.message !== 'Unauthorized') {
       Sentry.captureException(error);

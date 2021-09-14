@@ -31,7 +31,7 @@ export class Holidays extends Entity {
     type: 'string'
   })
   origin?: string;
-  
+
   @property({
     type: 'string',
     required: true,
@@ -58,9 +58,3 @@ export class Holidays extends Entity {
     super(data);
   }
 }
-
-export interface HolidaysRelations {
-  // describe navigational properties here
-}
-
-export type HolidaysWithRelations = Holidays & HolidaysRelations;

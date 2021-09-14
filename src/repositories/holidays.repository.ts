@@ -2,14 +2,13 @@
 import { inject } from '@loopback/core';
 import { DefaultCrudRepository } from '@loopback/repository';
 import { MongoHolidaysDataSource } from '../datasources';
-import { Holidays, HolidaysRelations } from '../models';
+import { Holidays } from '../models';
 import { ApichileService, GoogleCalProvider, GoogleApiTransformerService, ApiChileTranformerService } from '../services';
 import { CountriesRepository } from '../repositories';
 
 export class HolidaysRepository extends DefaultCrudRepository<
   Holidays,
-  typeof Holidays.prototype.id,
-  HolidaysRelations
+  typeof Holidays.prototype.id
 > {
   constructor(
     @inject('datasources.mongoHolidays')
