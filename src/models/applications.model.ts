@@ -21,14 +21,7 @@ export class Applications extends Entity {
   })
   key: string;
 
-
   constructor(data?: Partial<Applications>) {
     super(data);
   }
 }
-
-export interface ApplicationsRelations {
-  // describe navigational properties here
-}
-
-export type ApplicationsWithRelations = Applications & ApplicationsRelations;

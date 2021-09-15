@@ -6,8 +6,6 @@ import { Holidays } from '../models';
 export class GoogleApiTransformerService {
   private origin = 'Google';
 
-  constructor() { }
-
   /*
    * Add service methods here
    */

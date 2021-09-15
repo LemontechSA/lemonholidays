@@ -27,11 +27,11 @@ export class GoogleCalProvider {
       }
     });
     const calendarId = `es.${countries?.googleCode ?? country}#holiday@group.v.calendar.google.com`;
-    const list = await calendar.events.list({
+
+    return calendar.events.list({
       calendarId,
       timeMin,
       timeMax,
     });
-    return list;
   }
 }
