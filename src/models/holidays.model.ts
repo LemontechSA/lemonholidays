@@ -54,6 +54,11 @@ export class Holidays extends Entity {
   })
   updatedAt?: Date;
 
+  @property({
+    itemType: Holidays
+  })
+  data?: Array<Holidays>;
+
   constructor(data?: Partial<Holidays>) {
     super(data);
   }

@@ -51,7 +51,7 @@ export class HolidaysController {
     @param.header.string('appKey') appKey: string,
     @param.path.string('country') country: string,
     @param.query.number('year') year?: number,
-  ): Promise<Holidays[]> {
+  ) {
     const authorized = await this.appKeyProvider.authorize(appKey);
     if (!authorized) {
       throw new Error("Unauthorized");

@@ -45,6 +45,19 @@ export class HolidaysRepository extends DefaultCrudRepository<
           }
         ]
       }
+    }).then(data => {
+      data.reduce((result, currentValue) => {
+        // If an array already present for key, push it to the array. Else create an array and push the object
+        const index = data.findIndex(value => {
+          return value.date === currentValue.date;
+        })
+
+        console.log(index);
+        // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+        return result;
+      }, [])
+
+      return data;
     })
 
   }
