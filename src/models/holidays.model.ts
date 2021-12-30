@@ -55,6 +55,7 @@ export class Holidays extends Entity {
   updatedAt?: Date;
 
   @property({
+    default: [],
     itemType: Holidays
   })
   data?: Array<Holidays>;
