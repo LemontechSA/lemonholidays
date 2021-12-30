@@ -27,7 +27,7 @@ export function givenCountryData(country?: Partial<Countries>) {
 export function givenHolidayData(holiday?: Partial<Holidays>) {
   const data = Object.assign({
     name: "Feriado Test",
-    date: new Date(),
+    date: new Date('2021-12-12'),
     type: "Civil",
     origin: "APIChile",
     country: "cl",

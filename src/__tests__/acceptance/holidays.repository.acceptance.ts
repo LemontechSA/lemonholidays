@@ -55,6 +55,32 @@ describe('Acceptance Test HolidaysRepository', () => {
     expect(result).to.be.eql([]);
   });
 
+  it('invokes function findByCountry with data result', async () => {
+    await givenCountryInstance();
+    const holiday = await givenHolidayInstance();
+    const result = await holidaysRepository.findByCountry("cl", 2021)
+
+    expect(result).to.be.eql([holiday]);
+  });
+
+  it('invokes function findByCountry with equal dates holidays ', async () => {
+    await givenCountryInstance();
+
+    const holidays = [];
+
+    for (let index = 0; index < 3; index++) {
+      const currentHoliday = await givenHolidayInstance();
+      holidays.push(currentHoliday);
+    }
+
+    const rootHoliday = holidays[0];
+    holidays.splice(0, 1);
+    rootHoliday.data = holidays;
+    const result = await holidaysRepository.findByCountry("cl", 2021)
+
+    expect(result).to.be.eql([rootHoliday]);
+  });
+
   async function givenCountryRepository() {
     countriesRepository = await app.getRepository(CountriesRepository);
   }
