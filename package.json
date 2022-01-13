@@ -29,14 +29,12 @@
     "docker:build": "docker build -t lemonholydays .",
     "docker:run": "docker run -p 3000:3000 -d lemonholydays",
     "premigrate": "npm run build",
-    "migrate": "node ./dist/migrate",
     "preopenapi-spec": "npm run build",
     "openapi-spec": "node ./dist/openapi-spec",
     "rebuild": "npm run clean && npm run build",
     "prestart": "npm run rebuild",
     "start": "node -r source-map-support/register .",
-    "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
-    "script:import:holidays": "npm run rebuild && node dist/scripts/import-holidays.js"
+    "clean": "lb-clean dist *.tsbuildinfo .eslintcache"
   },
   "repository": {
     "type": "git",
