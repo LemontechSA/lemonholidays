@@ -11,10 +11,9 @@ export const logMiddleware: Middleware = async (middlewareCtx: MiddlewareContext
   try {
     return await next();
   } catch (error) {
-    if (error.message !== 'Unauthorized') {
+    if (error.name !== 'UnauthorizedError' && error.name !== 'NotFoundError') {
       Sentry.captureException(error);
-      throw error;
     }
-    middlewareCtx.response.status(401).json({code: 401, status: 'Unauthorized!'});
+    throw error;
   }
 }
