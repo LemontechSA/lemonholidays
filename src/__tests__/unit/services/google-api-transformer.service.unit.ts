@@ -8,7 +8,7 @@ import { Holidays } from '../../../models';
 
 describe('Unit Test GoogleApiTransformerService', () => {
 
-  class MyController {
+  class GoogleController {
     constructor(
       @inject('services.GoogleApiTransformerService')
       protected googleApiTransformerService: GoogleApiTransformerService,
@@ -26,13 +26,13 @@ describe('Unit Test GoogleApiTransformerService', () => {
     const data: Object = {
       "items": [
         {
-          "summary": "test festividad",
+          "summary": "test festividad 1",
           "start": {
             "date": "2021-03-28"
           }
         },
         {
-          "summary": "test festividad2",
+          "summary": "test festividad 2",
           "start": {
             "date": "2021-03-29"
           }
@@ -41,9 +41,13 @@ describe('Unit Test GoogleApiTransformerService', () => {
     };
 
     const country: string = "pe";
-    let controller = new MyController(googleApiTransformerService);
+    let controller = new GoogleController(googleApiTransformerService);
     dataTransformed = await controller.callgoogleApiTransformer(data, country);
     expect(dataTransformed.length).to.eql(2);
-
+    expect(dataTransformed[0]['country']).to.eql(country);
+    expect(dataTransformed[0]['date']).to.eql(new Date("2021-03-28"));
+    expect(dataTransformed[0]['name']).to.eql("test festividad 1");
+    expect(dataTransformed[0]['origin']).to.eql("Google");
+    expect(dataTransformed[0]['type']).to.eql('Festivo');
   });
 });
