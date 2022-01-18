@@ -20,8 +20,7 @@ describe('Unit Test GoogleApiTransformerService', () => {
 
   it('invokes function transformer', async () => {
 
-    let googleApiTransformerService = new GoogleApiTransformerService();
-    let dataTransformed: Array<Holidays>;
+    const googleApiTransformerService = new GoogleApiTransformerService();
     const data: Object = {
       "items": [
         {
@@ -39,9 +38,9 @@ describe('Unit Test GoogleApiTransformerService', () => {
       ]
     };
 
-    const country: string = "pe";
-    let controller = new GoogleController(googleApiTransformerService);
-    dataTransformed = await controller.callgoogleApiTransformer(data, country);
+    const country = "pe";
+    const controller = new GoogleController(googleApiTransformerService);
+    const dataTransformed = await controller.callgoogleApiTransformer(data, country);
     expect(dataTransformed.length).to.eql(2);
     expect(dataTransformed[0]['country']).to.eql(country);
     expect(dataTransformed[0]['date']).to.eql(new Date("2021-03-28"));
