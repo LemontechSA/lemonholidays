@@ -9,10 +9,16 @@ export class AppKeyProvider {
     ) { }
 
   async authorize(key: string) {
+    if (!key) {
+      return false;
+    }
+
     const result = await this.applicationsRepository.find({where: {'key': key}});
+
     if (result.length > 0) {
       return true;
     }
+
     return false;
   }
 }
