@@ -58,7 +58,7 @@ export class Holidays extends Entity {
     default: [],
     itemType: Holidays
   })
-  data?: Array<Holidays>;
+  data: Array<Holidays>;
 
   constructor(data?: Partial<Holidays>) {
     super(data);
