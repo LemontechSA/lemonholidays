@@ -29,23 +29,8 @@ describe('Acceptance Test HolidaysRepository', () => {
   });
 
   it('invokes function createOrUpdate', async () => {
-    const country:Partial<Countries> = {
-      name: 'Perú',
-      code: "pe",
-      origin: "Google",
-      googleCode: "pe"
-    };
-    const holiday:Partial<Holidays> = {
-      name: "Feriado Test Pe",
-      date: new Date('2021-12-13'),
-      type: "Civil",
-      origin: "Google",
-      country: "pe",
-      active: true,
-      createdAt: new Date()
-    }
-    await givenCountryInstance(country);
-    await givenHolidayInstance(holiday);
+    await givenCountryInstance();
+    await givenHolidayInstance();
     const result = await holidaysRepository.createOrUpdate()
     expect(result).to.equal(null);
   });
