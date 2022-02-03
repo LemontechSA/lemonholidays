@@ -9,7 +9,6 @@ export class CronComponent {
   ) {
   }
 
-  // tslint:disable
   async start() {
     cron.schedule(process.env.CRON_SCHEDULE, async () => {
       const date: Date = new Date();
@@ -17,6 +16,4 @@ export class CronComponent {
       await this.holidaysRepository.createOrUpdate();
     });
   }
-  // tslint:enable
-
 }
