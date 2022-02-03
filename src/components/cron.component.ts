@@ -16,5 +16,4 @@ export class CronComponent {
       await this.holidaysRepository.createOrUpdate();
     });
   }
-
 }
