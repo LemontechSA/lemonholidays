@@ -3,7 +3,7 @@ import { LemonholidaysApplication } from '../..';
 import { setupApplication } from './test-helper';
 import { HolidaysRepository } from '../../repositories/holidays.repository';
 import { Holidays } from '../../models';
-import { givenApplicationData } from '../helpers/database.helpers';
+import { givenHolidayData } from '../helpers/database.helpers';
 
 describe('Acceptance Test AdminHolidaysController', () => {
   let app: LemonholidaysApplication;
@@ -15,7 +15,7 @@ describe('Acceptance Test AdminHolidaysController', () => {
   });
 
   before(async () => {
-    await givenApplicationRepository();
+    await givenHolidayRepository();
   });
 
   beforeEach(async () => {
@@ -27,10 +27,19 @@ describe('Acceptance Test AdminHolidaysController', () => {
   });
 
   it('invokes GET /admin/holidays', async () => {
-    const persistHoliday = await givenHolidaysInstance();
-    const result = await client.get('/admin/holidays').expect(200);
+    const holidays = [];
 
-    expect(result.body).to.containDeep([persistHoliday]);
+    for (let index = 0; index < 3; index++) {
+      const currentHoliday = await givenHolidayInstance();
+      holidays.push(currentHoliday);
+    }
+
+    const rootHoliday = holidays[0];
+    holidays.splice(0, 1);
+    rootHoliday.data = holidays;
+
+    const result = await client.get('/admin/holidays').expect(200);
+    expect(result).to.be.eql([rootHoliday]);
   });
 
   it('invokes GET /admin/holidays/{id} with bad id', async () => {
@@ -38,7 +47,7 @@ describe('Acceptance Test AdminHolidaysController', () => {
   });
 
   it('invokes GET /admin/holidays/{id}', async () => {
-    const persistHoliday = await givenHolidaysInstance();
+    const persistHoliday = await givenHolidayInstance();
     const result = await client.get(`/admin/holidays/${persistHoliday.id}`);
 
     expect(result.body).to.containEql(persistHoliday);
@@ -46,24 +55,18 @@ describe('Acceptance Test AdminHolidaysController', () => {
 
   it('invokes PATCH /admin/holidays/{id}', async () => {
     const data = {
-      name: "applications test edit",
-      key: "<ke-edit>",
+      name: "Test-test",
     };
-    const persistHoliday = await givenHolidaysInstance();
+    const persistHoliday = await givenHolidayInstance();
     await client.patch('/admin/holidays/' + persistHoliday.id).send(data).expect(204);
   });
 
-  it('invokes DELETE /admin/holidays/{id}', async () => {
-    const persistHoliday = await givenHolidaysInstance();
-    await client.del('/admin/holidays/' + persistHoliday.id).expect(204);
-  });
-
-  async function givenApplicationRepository() {
+  async function givenHolidayRepository() {
     holidaysRepository = await app.getRepository(HolidaysRepository);
   }
 
-  async function givenHolidaysInstance(holidays?: Partial<Holidays>) {
-    return holidaysRepository.create(givenApplicationData(holidays));
+  async function givenHolidayInstance(holidays?: Partial<Holidays>) {
+    return holidaysRepository.create(givenHolidayData(holidays));
   }
 
   async function givenEmptyDatabase() {
