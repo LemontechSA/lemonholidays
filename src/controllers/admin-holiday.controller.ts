@@ -1,6 +1,5 @@
 import { authenticate } from '@loopback/authentication';
 import {
-  Filter,
   repository
 } from '@loopback/repository';
 import {
@@ -17,12 +16,18 @@ import { HolidaysRepository } from '../repositories';
 @api({
   basePath: '/admin/holidays',
   paths: {
-    '/{id}': {
+    '/{country}': {
       get: {
         operationId: 'AdminHolidayController.find',
         'x-operation-name': 'find',
         'x-controller-name': 'AdminHolidayController',
+        parameters: [
+          { name: 'country', schema: { type: 'string' } },
+          { name: 'year', schema: { type: 'number' }, in: 'query' },
+        ],
       },
+    },
+    '/{id}': {
       patch: {
         operationId: 'AdminHolidayController.updateById',
         'x-operation-name': 'updateById',
@@ -62,7 +67,7 @@ export class AdminHolidayController {
   }
 
   @authenticate('jwt')
-  @get('/')
+  @get('/{country}')
   @response(200, {
     description: 'Array of Holidays model instances',
     content: {
@@ -75,9 +80,10 @@ export class AdminHolidayController {
     },
   })
   async find(
-    @param.filter(Holidays) filter?: Filter<Holidays>,
+    @param.path.string('country') country: string,
+    @param.query.number('year') year?: number,
   ): Promise<Holidays[]> {
-    return this.holidaysRepository.find(filter);
+    return this.holidaysRepository.findByCountry(country, year);
   }
 
 }
