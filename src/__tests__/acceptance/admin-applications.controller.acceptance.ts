@@ -1,6 +1,6 @@
-import {Client, expect} from '@loopback/testlab';
-import {LemonholidaysApplication} from '../..';
-import {setupApplication} from './test-helper';
+import { Client, expect } from '@loopback/testlab';
+import { LemonholidaysApplication } from '../..';
+import { setupApplication } from './test-helper';
 import { ApplicationsRepository } from '../../repositories/applications.repository';
 import { Applications } from '../../models';
 import { givenApplicationData } from '../helpers/database.helpers';
@@ -11,7 +11,7 @@ describe('Acceptance Test AdminApplicationsController', () => {
   let applicationRepository: ApplicationsRepository;
 
   before('setupApplication', async () => {
-    ({app, client} = await setupApplication());
+    ({ app, client } = await setupApplication());
   });
 
   before(async () => {

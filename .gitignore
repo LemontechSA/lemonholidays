@@ -68,3 +68,6 @@ typings/
 
 # test db in memory for testing
 /data/dbtest.json
+
+# docker
+docker-compose.yml
