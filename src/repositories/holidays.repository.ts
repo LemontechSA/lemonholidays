@@ -46,19 +46,20 @@ export class HolidaysRepository extends DefaultCrudRepository<
         ]
       }
     }).then(data => {
-      const parseData: Array<Holidays> = [];
+      const holidaysCollection: Array<Holidays> = [];
       data.forEach(currentValue => {
-        const resultIndex = parseData.findIndex(value => {
-          return  value.date.getTime() === currentValue.date.getTime()
+        const searchIndex = holidaysCollection.findIndex(holiday => {
+          return holiday.date.getTime() === currentValue.date.getTime()
         })
-        if (resultIndex === -1) {
-          parseData.push(currentValue);
+        if (searchIndex === -1) {
+          holidaysCollection.push(currentValue);
         } else {
-          parseData[resultIndex].data.push(currentValue);
+          holidaysCollection[searchIndex].data = holidaysCollection[searchIndex].data ?? [];
+          holidaysCollection[searchIndex].data.push(currentValue);
         }
       });
 
-      return parseData;
+      return holidaysCollection;
     })
 
   }
