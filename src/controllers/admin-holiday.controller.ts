@@ -94,7 +94,16 @@ export class AdminHolidayController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Holidays, { partial: true, exclude: ['type', 'country', 'createdAt', 'id', 'updatedAt', 'origin'] }),
+          schema: getModelSchemaRef(Holidays, {
+            partial: true, exclude: [
+              'id',
+              'type',
+              'country',
+              'createdAt',
+              'updatedAt',
+              'origin'
+            ]
+          }),
         },
       },
     })
