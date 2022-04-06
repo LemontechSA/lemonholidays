@@ -9,7 +9,8 @@ import {
   get,
   requestBody,
   response,
-  del
+  del,
+  post
 } from '@loopback/rest';
 import { Holidays } from '../models';
 import { HolidaysRepository } from '../repositories';
@@ -17,6 +18,13 @@ import { HolidaysRepository } from '../repositories';
 @api({
   basePath: '/admin/holidays',
   paths: {
+    '/': {
+      post: {
+        operationId: 'AdminHolidayController.create',
+        'x-operation-name': 'create',
+        'x-controller-name': 'AdminHolidayController',
+      }
+    },
     '/{country}': {
       get: {
         operationId: 'AdminHolidayController.find',
@@ -53,6 +61,28 @@ export class AdminHolidayController {
     @repository(HolidaysRepository)
     public holidaysRepository: HolidaysRepository,
   ) { }
+
+  @authenticate('jwt')
+  @post('/')
+  @response(200, {
+    description: 'Holidays model instance',
+    content: { 'application/json': { schema: getModelSchemaRef(Holidays) } },
+  })
+  async create(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Holidays, {
+            title: 'NewHoliday',
+            exclude: ['id'],
+          }),
+        },
+      },
+    })
+    holidays: Omit<Holidays, 'id'>,
+  ): Promise<Holidays> {
+    return this.holidaysRepository.create(holidays);
+  }
 
   @authenticate('jwt')
   @patch('/{id}')
