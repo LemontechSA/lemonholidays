@@ -8,7 +8,8 @@ import {
   patch,
   get,
   requestBody,
-  response
+  response,
+  del
 } from '@loopback/rest';
 import { Holidays } from '../models';
 import { HolidaysRepository } from '../repositories';
@@ -28,6 +29,14 @@ import { HolidaysRepository } from '../repositories';
       },
     },
     '/{id}': {
+      del: {
+        operationId: 'AdminHolidayController.deleteById',
+        'x-operation-name': 'deleteById',
+        'x-controller-name': 'AdminHolidayController',
+        parameters: [
+          { name: 'id', schema: { type: 'string' } },
+        ],
+      },
       patch: {
         operationId: 'AdminHolidayController.updateById',
         'x-operation-name': 'updateById',
@@ -64,6 +73,15 @@ export class AdminHolidayController {
     holidays.origin = 'Manual';
     holidays.updatedAt = new Date();
     await this.holidaysRepository.updateById(id, holidays);
+  }
+
+  @authenticate('jwt')
+  @del('/{id}')
+  @response(204, {
+    description: 'Admin Holiday DELETE success',
+  })
+  async deleteById(@param.path.string('id') id: string): Promise<void> {
+    await this.holidaysRepository.deleteById(id);
   }
 
   @authenticate('jwt')
