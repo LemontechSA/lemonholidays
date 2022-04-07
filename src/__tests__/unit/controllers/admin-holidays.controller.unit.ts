@@ -10,8 +10,8 @@ import { givenHolidayData } from '../../helpers/database.helpers';
 import { HolidaysRepository } from '../../../repositories/holidays.repository';
 
 describe('Unit Test AdminHolidaysController', () => {
-  let applicationInstance: Holidays;
-  let applicationInstanceWithId: Holidays;
+  let holidayInstance: Holidays;
+  let holidayInstanceWithId: Holidays;
   let controller: AdminHolidayController;
   let repository: StubbedInstanceWithSinonAccessor<HolidaysRepository>;
 
@@ -19,10 +19,10 @@ describe('Unit Test AdminHolidaysController', () => {
 
   it('create', async () => {
     const createStubMethod = repository.stubs.create;
-    createStubMethod.resolves(applicationInstanceWithId);
-    const result = await controller.create(applicationInstance);
-    expect(result).to.eql(applicationInstanceWithId);
-    sinon.assert.calledWith(createStubMethod, applicationInstance);
+    createStubMethod.resolves(holidayInstanceWithId);
+    const result = await controller.create(holidayInstance);
+    expect(result).to.eql(holidayInstanceWithId);
+    sinon.assert.calledWith(createStubMethod, holidayInstance);
   });
 
   it('delete', async () => {
@@ -32,10 +32,19 @@ describe('Unit Test AdminHolidaysController', () => {
     expect(result).to.eql(undefined);
   });
 
+  it('update', async () => {
+    const updateStubMethod = repository.stubs.updateById;
+    updateStubMethod.resolves();
+    const result = await controller.updateById("1", holidayInstance);
+    holidayInstance.origin = "Manual";
+    holidayInstance.updatedAt = new Date();
+    expect(result).to.eql(holidayInstance);
+  });
+
   function resetTest() {
     repository = createStubInstance(HolidaysRepository);
-    applicationInstance = givenHolidayData();
-    applicationInstanceWithId = givenHolidayData({ id: "1" });
+    holidayInstance = givenHolidayData();
+    holidayInstanceWithId = givenHolidayData({ id: "1" });
     controller = new AdminHolidayController(repository);
   }
 });

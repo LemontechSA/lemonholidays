@@ -109,10 +109,11 @@ export class AdminHolidayController {
       },
     })
     holiday: Holidays,
-  ): Promise<void> {
+  ): Promise<Holidays> {
     holiday.origin = 'Manual';
     holiday.updatedAt = new Date();
     await this.holidaysRepository.updateById(id, holiday);
+    return holiday;
   }
 
   @authenticate('jwt')
