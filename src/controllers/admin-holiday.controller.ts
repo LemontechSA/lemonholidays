@@ -64,7 +64,7 @@ export class AdminHolidayController {
 
   @authenticate('jwt')
   @post('/')
-  @response(200, {
+  @response(201, {
     description: 'Holidays model instance',
     content: { 'application/json': { schema: getModelSchemaRef(Holidays) } },
   })
