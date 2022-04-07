@@ -86,8 +86,9 @@ export class AdminHolidayController {
 
   @authenticate('jwt')
   @patch('/{id}')
-  @response(204, {
+  @response(200, {
     description: 'Admin Holiday PATCH success',
+    content: { 'application/json': { schema: getModelSchemaRef(Holidays) } },
   })
   async updateById(
     @param.path.string('id') id: string,
@@ -107,11 +108,11 @@ export class AdminHolidayController {
         },
       },
     })
-    holidays: Holidays,
+    holiday: Holidays,
   ): Promise<void> {
-    holidays.origin = 'Manual';
-    holidays.updatedAt = new Date();
-    await this.holidaysRepository.updateById(id, holidays);
+    holiday.origin = 'Manual';
+    holiday.updatedAt = new Date();
+    await this.holidaysRepository.updateById(id, holiday);
   }
 
   @authenticate('jwt')

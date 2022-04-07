@@ -25,6 +25,13 @@ describe('Unit Test AdminHolidaysController', () => {
     sinon.assert.calledWith(createStubMethod, applicationInstance);
   });
 
+  it('delete', async () => {
+    const deleteStubMethod = repository.stubs.delete;
+    deleteStubMethod.resolves();
+    const result = await controller.deleteById("1");
+    expect(result).to.eql(undefined);
+  });
+
   function resetTest() {
     repository = createStubInstance(HolidaysRepository);
     applicationInstance = givenHolidayData();
