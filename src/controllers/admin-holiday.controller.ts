@@ -8,7 +8,9 @@ import {
   patch,
   get,
   requestBody,
-  response
+  response,
+  del,
+  post
 } from '@loopback/rest';
 import { Holidays } from '../models';
 import { HolidaysRepository } from '../repositories';
@@ -16,6 +18,13 @@ import { HolidaysRepository } from '../repositories';
 @api({
   basePath: '/admin/holidays',
   paths: {
+    '/': {
+      post: {
+        operationId: 'AdminHolidayController.create',
+        'x-operation-name': 'create',
+        'x-controller-name': 'AdminHolidayController',
+      }
+    },
     '/{country}': {
       get: {
         operationId: 'AdminHolidayController.find',
@@ -28,6 +37,14 @@ import { HolidaysRepository } from '../repositories';
       },
     },
     '/{id}': {
+      del: {
+        operationId: 'AdminHolidayController.deleteById',
+        'x-operation-name': 'deleteById',
+        'x-controller-name': 'AdminHolidayController',
+        parameters: [
+          { name: 'id', schema: { type: 'string' } },
+        ],
+      },
       patch: {
         operationId: 'AdminHolidayController.updateById',
         'x-operation-name': 'updateById',
@@ -46,24 +63,66 @@ export class AdminHolidayController {
   ) { }
 
   @authenticate('jwt')
+  @post('/')
+  @response(201, {
+    description: 'Holidays model instance',
+    content: { 'application/json': { schema: getModelSchemaRef(Holidays) } },
+  })
+  async create(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Holidays, {
+            title: 'NewHoliday',
+            exclude: ['id'],
+          }),
+        },
+      },
+    })
+    holidays: Omit<Holidays, 'id'>,
+  ): Promise<Holidays> {
+    return this.holidaysRepository.create(holidays);
+  }
+
+  @authenticate('jwt')
   @patch('/{id}')
-  @response(204, {
+  @response(200, {
     description: 'Admin Holiday PATCH success',
+    content: { 'application/json': { schema: getModelSchemaRef(Holidays) } },
   })
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Holidays, { partial: true, exclude: ['type', 'country', 'createdAt', 'id', 'updatedAt', 'origin'] }),
+          schema: getModelSchemaRef(Holidays, {
+            partial: true, exclude: [
+              'id',
+              'type',
+              'country',
+              'createdAt',
+              'updatedAt',
+              'origin'
+            ]
+          }),
         },
       },
     })
-    holidays: Holidays,
-  ): Promise<void> {
-    holidays.origin = 'Manual';
-    holidays.updatedAt = new Date();
-    await this.holidaysRepository.updateById(id, holidays);
+    holiday: Holidays,
+  ): Promise<Holidays> {
+    holiday.origin = 'Manual';
+    holiday.updatedAt = new Date();
+    await this.holidaysRepository.updateById(id, holiday);
+    return holiday;
+  }
+
+  @authenticate('jwt')
+  @del('/{id}')
+  @response(204, {
+    description: 'Admin Holiday DELETE success',
+  })
+  async deleteById(@param.path.string('id') id: string): Promise<void> {
+    await this.holidaysRepository.deleteById(id);
   }
 
   @authenticate('jwt')
