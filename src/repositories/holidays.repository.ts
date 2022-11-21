@@ -180,7 +180,7 @@ export class HolidaysRepository extends DefaultCrudRepository<
   async disableById(id: string) {
     const holiday = await this.findById(id);
     holiday.active = false;
-    await this.update(holiday);
+    return this.update(holiday);
   }
 
 }
