@@ -122,7 +122,7 @@ export class AdminHolidayController {
     description: 'Admin Holiday DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.holidaysRepository.deleteById(id);
+    return this.holidaysRepository.disableById(id);
   }
 
   @authenticate('jwt')

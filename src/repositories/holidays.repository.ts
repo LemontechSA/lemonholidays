@@ -42,6 +42,9 @@ export class HolidaysRepository extends DefaultCrudRepository<
           },
           {
             date: { between: [first, last] }
+          },
+          {
+            active: true
           }
         ]
       }
@@ -172,6 +175,12 @@ export class HolidaysRepository extends DefaultCrudRepository<
       await this.updateById(holidayFind.id, holidayFind);
       await this.create(holiday);
     }
+  }
+
+  async disableById(id: string) {
+    const holiday = await this.findById(id);
+    holiday.active = false;
+    return this.update(holiday);
   }
 
 }
