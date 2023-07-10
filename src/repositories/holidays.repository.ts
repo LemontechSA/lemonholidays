@@ -132,7 +132,7 @@ export class HolidaysRepository extends DefaultCrudRepository<
     //si existen los desactivo si su origen es distinto a Manual y es mayor o igual a la fecha actual
     if (missingHolidays.length > 0) {
       for (const holiday of missingHolidays) {
-        if (holiday.origin !== 'Manual' && holiday.date >= currentDay) {
+        if (holiday.origin !== 'manual' && holiday.date >= currentDay) {
           holiday.active = false;
           holiday.updatedAt = new Date();
           await this.update(holiday);
@@ -169,7 +169,7 @@ export class HolidaysRepository extends DefaultCrudRepository<
 
     //si existe en la base de datos, el feriado se desactiva si el origen es distinto a Manual y mayor o igual a la fecha actual
     //ademas se crea un nuevo feriado
-    if (holidayFind.origin !== 'Manual' && holidayFind.date >= currentDay) {
+    if (holidayFind.origin !== 'manual' && holidayFind.date >= currentDay) {
       holidayFind.active = false;
       holidayFind.updatedAt = new Date();
       await this.updateById(holidayFind.id, holidayFind);
